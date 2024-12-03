@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目介绍</title>
+    <link rel="stylesheet" href="common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #ffcce6, #b3e0ff, #ffcce6, #99d6ff);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+            font-family: 'Ma Shan Zheng', cursive;
+            color: #666;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+
+        .about-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 102, 179, 0.15);
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(120deg, rgba(255, 153, 204, 0.1), rgba(153, 204, 255, 0.1));
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 153, 204, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
+        }
+
+        h2 {
+            color: #ff6699;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .feature {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateX(5px);
+        }
+
+        .feature-title {
+            color: #ff4d4d;
+            font-size: 1.3em;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .keyword {
+            display: inline-block;
+            padding: 3px 10px;
+            background: linear-gradient(120deg, #ff99cc, #99ccff);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 0 5px;
+        }
+
+        .home-button {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: linear-gradient(120deg, rgba(255, 153, 204, 0.2), rgba(153, 204, 255, 0.2));
+            backdrop-filter: blur(8px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            color: #ff6699;
+            opacity: 0;
+            cursor: pointer;
+            font-family: 'Ma Shan Zheng', cursive;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 100px;
+        }
+
+        body:hover .home-button {
+            opacity: 0.6;
+        }
+
+        .home-button:hover {
+            opacity: 1 !important;
+            transform: translateY(-2px);
+            background: linear-gradient(120deg, #ff99cc, #99ccff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 153, 204, 0.2);
+        }
+
+        /* 触摸设备优化 */
+        @media (hover: none) {
+            .home-button {
+                opacity: 0.8;
+                background: linear-gradient(120deg, rgba(255, 153, 204, 0.3), rgba(153, 204, 255, 0.3));
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .about-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .feature-title {
+                font-size: 1.2em;
+            }
+
+            .feature-desc {
+                font-size: 0.95em;
+            }
+
+            .keyword {
+                font-size: 0.85em;
+                padding: 2px 8px;
+                margin: 2px;
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 25px;
+            }
+
+            .feature {
+                padding: 12px;
+                margin: 10px 0;
+            }
+
+            .home-button {
+                right: 10px;
+                bottom: 10px;
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .about-container {
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 2.2em;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .about-container {
+                max-width: 1000px;
+            }
+
+            .section {
+                padding: 25px;
+            }
+
+            .feature {
+                padding: 20px;
+            }
+        }
+
+        @media (hover: none) {
+            .feature:hover {
+                transform: none;
+            }
+
+            .section:hover {
+                transform: none;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(120deg, #ff99cc, #99ccff);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(120deg, #ff80bf, #80bfff);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @supports (-webkit-overflow-scrolling: touch) {
+            body {
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        .scroll-top {
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            backdrop-filter: blur(8px);
+            padding: 10px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #666;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="about-container">
+        <h1>项目功能介绍</h1>
+        
+        <div class="section">
+            <h2>🎯 主要功能</h2>
+            <div class="feature">
+                <div class="feature-title">情话页面</div>
+                <div class="feature-desc">
+                    输入关键词：<span class="keyword">情</span> <span class="keyword">爱</span> 
+                    <span class="keyword">辉</span> <span class="keyword">0819</span> 等<br>
+                    展示浪漫情话，支持中英双语显示，配有漂亮的弹幕和动画效果
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-title">趣味知识</div>
+                <div class="feature-desc">
+                    输入关键词：<span class="keyword">好玩</span><br>
+                    包含趣味灯谜、民间谚语、冷知识等内容，让学习变得有趣
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-title">育儿知识</div>
+                <div class="feature-desc">
+                    输入关键词：<span class="keyword">无忧</span><br>
+                    提供专业的育儿知识和建议，帮助父母更好地照顾宝宝
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚡ 特色功能</h2>
+            <div class="feature">
+                <div class="feature-title">智能搜索</div>
+                <div class="feature-desc">
+                    支持多个搜索引擎，优先使用夸克搜索，自动切换备用搜索引擎
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-title">时间显示</div>
+                <div class="feature-desc">
+                    显示当前时间和农历信息，包含节气、宜忌等内容
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-title">计时器</div>
+                <div class="feature-desc">
+                    精确记录在一起的时间，精确到毫秒
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎨 界面设计</h2>
+            <div class="feature">
+                <div class="feature-title">响应式布局</div>
+                <div class="feature-desc">
+                    完美适配各种设备，从手机到电脑都能获得最佳体验
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-title">动画效果</div>
+                <div class="feature-desc">
+                    精心设计的过渡动画和交互效果，提升用户体验
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-title">主题风格</div>
+                <div class="feature-desc">
+                    统一的粉色系主题，营造温馨浪漫的氛围
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="home-button" onclick="window.location.href='index.html'">返回首页</button>
+    <button class="scroll-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // 滚动到顶部按钮显示控制
+        const scrollTopButton = document.querySelector('.scroll-top');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopButton.classList.add('visible');
+            } else {
+                scrollTopButton.classList.remove('visible');
+            }
+        });
+
+        // 滚动到顶部函数
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // 优化滚动性能
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                requestAnimationFrame(() => {
+                    // 处理滚动相关的视觉更新
+                    scrollTimeout = null;
+                });
+                scrollTimeout = true;
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html> 

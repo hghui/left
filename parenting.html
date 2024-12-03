@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>育儿小知识</title>
+    <link rel="stylesheet" href="common.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #ffcce6, #b3e0ff, #ffcce6, #99d6ff);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .parenting-container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 102, 179, 0.15);
+            width: min(90vw, 600px);
+            position: relative;
+            will-change: transform;
+            backface-visibility: hidden;
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tip-text {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: #ff6699;
+            margin: 20px;
+            line-height: 1.6;
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .tip-source {
+            display: inline-block;
+            padding: 2px 8px;
+            background: linear-gradient(120deg, #ff99cc, #99ccff);
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 8px;
+            box-shadow: 0 2px 4px rgba(255, 153, 204, 0.2);
+        }
+
+        .tip-from {
+            color: #ff99cc;
+            font-size: 0.9em;
+        }
+
+        .new-tip {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(120deg, #ff99cc, #99ccff);
+            color: white;
+            font-family: 'Ma Shan Zheng', cursive;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 153, 204, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .new-tip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 153, 204, 0.3);
+            background: linear-gradient(120deg, #ff80bf, #80bfff);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 153, 204, 0.95), rgba(153, 204, 255, 0.95));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.9);
+            border-top-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-overlay p {
+            margin-top: 15px;
+            color: white;
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.1em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 大屏幕适配 */
+        @media (min-width: 1440px) {
+            .parenting-container {
+                max-width: 800px;
+                padding: 3rem;
+            }
+
+            .tip-text {
+                font-size: 1.8rem;
+            }
+
+            .new-tip {
+                padding: 15px 30px;
+                font-size: 1.3em;
+            }
+        }
+
+        /* 平板适配 */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .parenting-container {
+                width: 80vw;
+                padding: 2.5rem;
+            }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 767px) {
+            body {
+                padding: 10px;
+            }
+
+            .parenting-container {
+                width: 95vw;
+                padding: 1.5rem;
+            }
+
+            .tip-text {
+                font-size: 1.2rem;
+            }
+
+            .tip-source {
+                font-size: 0.75em;
+                padding: 2px 6px;
+            }
+
+            .tip-from {
+                font-size: 0.85em;
+            }
+        }
+
+        /* 触摸设备优化 */
+        @media (hover: none) {
+            .new-tip:hover {
+                transform: none;
+            }
+
+            .parenting-container:hover {
+                transform: none;
+            }
+
+            .home-button {
+                opacity: 0.8;
+            }
+        }
+
+        /* 动画性能优化 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="parenting-container">
+        <div class="tip-text" id="parenting-tip"></div>
+        <button class="new-tip" onclick="generateTip()">再来一条</button>
+    </div>
+    <button class="home-button theme-parenting" onclick="goHome()">返回首页</button>
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>正在加载育儿小知识...</p>
+    </div>
+
+    <script>
+        // 添加返回首页函数
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // 本地数据
+        const localTips = [
+            {
+                source: "本地",
+                from: "儿科医生",
+                content: "0-6个月宝宝建议纯母乳喂养，可以提供最佳营养和免疫力 🍼"
+            },
+            {
+                source: "本地",
+                from: "儿科医生",
+                content: "新生儿每天需要16-20小时的睡眠，有助于大脑发育和生长激素分泌 😴"
+            },
+            {
+                source: "本地",
+                from: "中国营养学会",
+                content: "6个月后可以开始添加辅食，从米糊开始，循序渐进添加蔬菜泥和水果泥 🥣"
+            },
+            {
+                source: "本地",
+                from: "中国疾病预防控制中心",
+                content: "婴儿每月都要按时体检和接种疫苗，建立基础免疫力很重要 💉"
+            },
+            {
+                source: "本地",
+                from: "中华护理学会儿科专业委员会",
+                content: "给宝宝洗澡水温37-38度，室温26-28度，避免着凉冒 🛁"
+            },
+            {
+                source: "本地",
+                from: "中国妇幼保健协会",
+                content: "宝宝出现发烧腹泻要及时就医，别随便服用成人药物 🏥"
+            },
+            {
+                source: "本地",
+                from: "中国学前教育研究会",
+                content: "3-6个月可以进行简单的抓握训练，有助于精细动作发展 🎯"
+            },
+            {
+                source: "本地",
+                from: "中国营养学会儿童营养专业委员会",
+                content: "1岁内的宝宝补充维生素D很重要，可以预防佝偻病 🌞"
+            },
+            {
+                source: "本地",
+                from: "中国优生优育协会",
+                content: "新生儿每天要观察大小便次数和性状，了解健康状况 👶"
+            },
+            {
+                source: "本地",
+                from: "中国儿童保健协会",
+                content: "0-3岁是语言发育关键期，要多和宝宝说话互动 🗣️"
+            },
+            {
+                source: "本地",
+                from: "中国妇幼保健协会",
+                content: "宝宝的衣物要用专门的婴儿洗衣液清洗，避免刺激皮肤 👕"
+            },
+            {
+                source: "本地",
+                from: "中国优生科学协会",
+                content: "定期测量身高体重，关注宝宝生长发育曲线 📏"
+            }
+        ];
+
+        // API配置
+        const API_CONFIG = {
+            url: 'https://api.apiopen.top/api/sentences',
+            backupUrl: 'https://v1.hitokoto.cn',
+            timeout: 5000,
+            retryCount: 3,
+            retryDelay: 1000
+        };
+
+        let tips = [...localTips];
+        let isLoading = false;
+
+        // 重试函数
+        async function fetchWithRetry(url, options, retries = API_CONFIG.retryCount) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error('Network response was not ok');
+                return await response.json();
+            } catch (error) {
+                if (retries > 0) {
+                    await new Promise(resolve => setTimeout(resolve, API_CONFIG.retryDelay));
+                    return fetchWithRetry(url, options, retries - 1);
+                }
+                throw error;
+            }
+        }
+
+        // 数据格式化函数
+        function formatTipData(data, source = '网络') {
+            if (data.result) {
+                return {
+                    source: source,
+                    from: '儿科医生',
+                    content: data.result.content || data.result.tip
+                };
+            } else if (data.tip) {
+                return {
+                    source: source,
+                    from: '儿科医生',
+                    content: data.tip
+                };
+            }
+            return null;
+        }
+
+        // 在没有网络数据时随机生成本地数据的组合
+        function generateLocalTip() {
+            const randomTips = [];
+            const usedIndexes = new Set();
+
+            // 随机选择3条本地数据组合
+            while (randomTips.length < 3 && usedIndexes.size < localTips.length) {
+                const index = Math.floor(Math.random() * localTips.length);
+                if (!usedIndexes.has(index)) {
+                    usedIndexes.add(index);
+                    randomTips.push(localTips[index]);
+                }
+            }
+
+            // 组合成新的提示
+            if (randomTips.length > 0) {
+                const combinedContent = randomTips
+                    .map(tip => tip.content.replace(/[🍼😴🥣💉🛁🏥🎯🌞👶🗣️👕📏]/g, ''))
+                    .join('；');
+                
+                return {
+                    source: '本地',
+                    from: '儿科医生',
+                    content: combinedContent + ' 👶'
+                };
+            }
+
+            return localTips[Math.floor(Math.random() * localTips.length)];
+        }
+
+        // 加载数据
+        async function loadTips() {
+            if (isLoading) return;
+            
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            loadingOverlay.classList.add('show');
+            isLoading = true;
+
+            try {
+                // 直接使用本地数据
+                tips = [...localTips];
+                
+                // 随机组合一些本地数据作为新提示
+                const combinedTips = [];
+                for (let i = 0; i < 5; i++) {
+                    combinedTips.push(generateLocalTip());
+                }
+                
+                tips = [...tips, ...combinedTips];
+                
+                localStorage.setItem('parenting_tips_cache', JSON.stringify({
+                    timestamp: Date.now(),
+                    data: tips
+                }));
+                
+                // 立即移除加载状态
+                loadingOverlay.classList.remove('show');
+            } catch (error) {
+                console.warn('Failed to load tips, using local data:', error);
+                tips = [...localTips];
+                loadingOverlay.classList.remove('show');
+            } finally {
+                isLoading = false;
+            }
+            
+            // 生成第一条提示
+            generateTip();
+        }
+
+        // 生成提示
+        function generateTip() {
+            const tipElement = document.getElementById('parenting-tip');
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            
+            tipElement.style.opacity = '0';
+            setTimeout(() => {
+                tipElement.innerHTML = `
+                    <span class="tip-source">[${randomTip.source}]</span>
+                    <span class="tip-from">${randomTip.from}：</span>
+                    <span class="tip-content">${randomTip.content}</span>
+                `;
+                tipElement.style.opacity = '1';
+            }, 300);
+        }
+
+        // 初始化
+        window.addEventListener('load', async () => {
+            loadTips();
+        });
+
+        // 定期刷新数据
+        setInterval(() => {
+            const randomTips = [];
+            for (let i = 0; i < 3; i++) {
+                randomTips.push(generateLocalTip());
+            }
+            tips = [...localTips, ...randomTips];
+        }, 5 * 60 * 1000); // 每5分钟刷新一次
+
+        // 使用 IntersectionObserver 优化动画触发
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // 使用 requestIdleCallback 优化非关键任务
+        const idleWork = (deadline) => {
+            if (deadline.timeRemaining() > 0) {
+                // 执行非关键任务，如数据预加载、缓存清理等
+            }
+            requestIdleCallback(idleWork);
+        };
+        requestIdleCallback(idleWork);
+
+        // 全局错误处理
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            // 可以添加错误上报逻辑
+        });
+
+        // Promise 错误处理
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+            // 可以添加错误上报逻辑
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Left</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.js"></script>
+    <style>
+        /* 基础样式：设置动态渐变背景 */
+        body {
+            background: linear-gradient(-45deg, #ffcce6, #b3e0ff, #ffcce6, #99d6ff);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 背景渐变动画 */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 主容器样式 */
+        .container {
+            text-align: center;
+            z-index: 2;
+            animation: fadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            padding: 2rem;
+            position: relative;
+            isolation: isolate;
+        }
+
+        /* 标题样式：渐变文字效果 */
+        h1 {
+            font-size: 9em;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: titleGradient 8s ease infinite;
+            font-family: 'Caveat', cursive;
+            transform: rotate(-5deg);
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.08);
+            letter-spacing: 0.1em;
+            filter: drop-shadow(0 10px 25px rgba(255, 102, 179, 0.2));
+        }
+
+        /* 搜索框样式：毛玻璃效果 */
+        #search-input {
+            padding: 15px 25px;
+            width: min(80vw, 500px);
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.2em;
+            transform: rotate(-1deg);
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            color: #666;
+            backdrop-filter: blur(5px);
+        }
+
+        /* 搜索框焦点状态 */
+        #search-input:focus {
+            box-shadow: 0 6px 25px rgba(255, 182, 193, 0.3);
+            transform: translateY(-2px);
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+        }
+
+        /* 搜索框占位符文本样式 */
+        #search-input::placeholder {
+            color: rgba(102, 102, 102, 0.6);
+            transition: color 0.3s ease;
+        }
+
+        /* 搜索框布局容器 */
+        .search-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* 搜索按钮样式：移动端显示 */
+        .search-button {
+            display: none;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 24px;
+            background: linear-gradient(120deg, #ff99cc, #99ccff);
+            color: white;
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(255, 153, 204, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 雪花动画效果 */
+        .snowflake {
+            position: fixed;
+            color: #fff;
+            font-size: 1.5em;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+                        0 0 15px rgba(255, 255, 255, 0.6),
+                        0 0 25px rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+            user-select: none;
+            z-index: 1;
+            animation: fall linear forwards, glow 2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .search-button {
+                display: inline-block;
+            }
+            
+            #search-input {
+                width: 65vw;
+                padding: 12px 20px;
+            }
+            
+            .search-box {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+
+        /* 游戏容器样式 */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 77, 77, 0.1);
+        }
+
+        .image-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .game-image {
+            width: 400px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .game-image:hover {
+            transform: scale(1.02);
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 820px;
+            padding: 10px 20px;
+            background: rgba(255, 102, 179, 0.1);
+            border-radius: 15px;
+        }
+
+        .timer {
+            font-size: 1.2em;
+            color: #ff4d4d;
+            font-weight: bold;
+        }
+
+        .difference-marker {
+            position: absolute;
+            border: 2px solid #ff4d4d;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .hint-button {
+            padding: 8px 16px;
+            background: linear-gradient(120deg, #ff99cc, #99ccff);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hint-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 153, 204, 0.3);
+        }
+
+        .score {
+            font-size: 1.2em;
+            color: #4d94ff;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 10px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .image-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .game-image {
+                width: 100%;
+                height: auto;
+                max-height: 40vh;
+            }
+
+            .game-info {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+                padding: 10px;
+            }
+
+            .hint-button {
+                width: 100%;
+                padding: 12px;
+                font-size: 1.1em;
+            }
+
+            .difference-marker {
+                transform: scale(0.8);
+            }
+        }
+
+        /* 游控制按钮 */
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .control-button {
+            padding: 8px 16px;
+            background: linear-gradient(120deg, #ff99cc, #99ccff);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 153, 204, 0.3);
+        }
+
+        /* 游戏标题样式 */
+        .game-title {
+            font-size: 1.5em;
+            color: #ff4d4d;
+            margin-bottom: 15px;
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow: 0 2px 4px rgba(255, 77, 77, 0.2);
+        }
+
+        /* 计时器样式 */
+        .timer-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            backdrop-filter: blur(8px);
+            padding: 15px 30px;
+            border-radius: 25px;
+            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Caveat', cursive;
+            color: #666;
+            transform: rotate(-1deg);
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .timer-label {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            font-family: 'Ma Shan Zheng', cursive;
+            color: rgba(102, 102, 102, 0.8);
+        }
+
+        #love-timer {
+            font-size: 1.8em;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 500;
+            letter-spacing: 2px;
+            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
+            text-shadow: none;
+        }
+
+        /* 时间显示容器 */
+        .time-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            backdrop-filter: blur(8px);
+            padding: 15px 30px;
+            border-radius: 25px;
+            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-family: 'Caveat', cursive;
+            color: #666;
+            text-align: center;
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            transform: rotate(-1deg);
+        }
+
+        .current-time {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 500;
+            letter-spacing: 2px;
+            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
+            text-shadow: none;
+        }
+
+        .lunar-info {
+            font-size: 1em;
+            font-family: 'Ma Shan Zheng', cursive;
+            color: rgba(102, 102, 102, 0.8);
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        .time-container:hover {
+            transform: translateY(-2px) rotate(-1deg);
+            box-shadow: 0 6px 25px rgba(255, 182, 193, 0.3);
+        }
+
+        /* 统一时间和计时器的动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) rotate(-1deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(-1deg);
+            }
+        }
+
+        /* 发光雪花 */
+        .snowflake {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            animation: snowfall linear infinite, glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 5px #fff,
+                        0 0 10px #fff,
+                        0 0 15px #ff99cc,
+                        0 0 20px #ff99cc,
+                        0 0 25px #ff99cc;
+            opacity: 0;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.2;
+            }
+        }
+
+        @keyframes glow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.5); }
+        }
+
+        /* 鼠标拖尾效果 */
+        .mouse-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            width: 5px;
+            height: 5px;
+            background: linear-gradient(45deg, #ff99cc, #99ccff);
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: trail-fade 1s ease-out forwards;
+        }
+
+        @keyframes trail-fade {
+            from {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(2);
+            }
+        }
+    </style>
+    <meta name="description" content="一个温馨的育儿知识分享平台，提供专业的育儿建议和知识">
+    <meta name="keywords" content="育儿,育儿知识,育儿建议,婴儿护理,儿童保健">
+    <link rel="canonical" href="https://your-domain.com/index.html">
+</head>
+<body>
+    <div class="snow"></div>
+    <div class="container">
+        <h1>Left</h1>
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="输入关键词...">
+            <button class="search-button" onclick="search()">搜索</button>
+        </div>
+    </div>
+    <div class="time-container">
+        <div id="current-time" class="current-time"></div>
+        <div id="lunar-info" class="lunar-info"></div>
+    </div>
+    <div class="timer-container">
+        <div class="timer-label">在一起已经</div>
+        <div id="love-timer"></div>
+    </div>
+    <script>
+        // 定义API接口配置
+        const API_CONFIG = {
+            riddles: 'https://api.example.com/riddles', // 灯谜API
+            proverbs: 'https://api.example.com/proverbs', // 谚语API
+            trivia: 'https://api.example.com/trivia'  // 冷知识API
+        };
+
+        // 本地缓存配置
+        const CACHE_CONFIG = {
+            maxAge: 1000 * 60 * 60, // 1小时缓存
+            key: 'jokes_cache'
+        };
+
+        // 默认的本地数据
+        const DEFAULT_DATA = {
+            riddles: [
+                "灯谜：'四季平安（打一个字）'\n「春：有四个季，上下都是平安」🏮",
+                "灯谜：'小姐上轿（打一个字）'\n「娶：上面是女，下面是取」💝",
+                // ... 其他灯谜数据
+            ],
+            proverbs: [
+                "农谚：'冬天不下雪，春天遭罪热'\n「说明雪对农作物的重要性」🌾",
+                "民谚：'冬练三九，夏练三伏'\n「说明锻炼要持之以恒」💪",
+                // ... 其他谚语数据
+            ],
+            trivia: [
+                "冷知'古代建筑为什么要用斗拱？'\n「可以分散房屋重量，防止震」🏰",
+                "你知道吗：'古人如何在冬天存放冰块？'\n「在地下挖窖，称为冰窖，可以保存一年」❄️",
+                // ... 其他冷知识数据
+            ],
+            spotDiff: [
+                {
+                    title: "春日庭院",
+                    image1: "images/garden1.jpg",
+                    image2: "images/garden2.jpg",
+                    differences: [
+                        { x: 120, y: 150, radius: 20, hint: "花朵颜色不同" },
+                        { x: 300, y: 200, radius: 25, hint: "蝴蝶位置变化" },
+                        { x: 450, y: 280, radius: 15, hint: "树叶缺失" }
+                    ],
+                    timeLimit: 60,
+                    difficulty: "简单"
+                },
+                {
+                    title: "冬日雪景",
+                    image1: "images/snow1.jpg",
+                    image2: "images/snow2.jpg",
+                    differences: [
+                        { x: 200, y: 180, radius: 20, hint: "雪人装饰不同" },
+                        { x: 350, y: 220, radius: 20, hint: "窗户形状变化" },
+                        { x: 500, y: 300, radius: 25, hint: "积雪厚度不同" }
+                    ],
+                    timeLimit: 45,
+                    difficulty: "中等"
+                }
+            ]
+        };
+
+        // 数据获取和缓存管理
+        class ContentManager {
+            constructor() {
+                this.cache = this.loadCache();
+                this.isLoading = false;
+                this.offlineMode = !navigator.onLine;
+                this.setupNetworkListeners();
+            }
+
+            setupNetworkListeners() {
+                window.addEventListener('online', () => {
+                    this.offlineMode = false;
+                    this.showToast('网络已连接，正在更新数据...');
+                    this.refreshContent();
+                });
+
+                window.addEventListener('offline', () => {
+                    this.offlineMode = true;
+                    this.showToast('已切换到离线模式');
+                });
+            }
+
+            showToast(message) {
+                // 创建或更新 toast 提示
+                let toast = document.getElementById('toast');
+                if (!toast) {
+                    toast = document.createElement('div');
+                    toast.id = 'toast';
+                    document.body.appendChild(toast);
+                }
+                toast.textContent = message;
+                toast.className = 'toast show';
+                setTimeout(() => toast.className = 'toast', 3000);
+            }
+
+            loadCache() {
+                const cached = localStorage.getItem(CACHE_CONFIG.key);
+                return cached ? JSON.parse(cached) : {
+                    timestamp: 0,
+                    data: DEFAULT_DATA
+                };
+            }
+
+            saveCache(data) {
+                const cache = {
+                    timestamp: Date.now(),
+                    data: data
+                };
+                localStorage.setItem(CACHE_CONFIG.key, JSON.stringify(cache));
+            }
+
+            async fetchContent(type) {
+                if (this.offlineMode) {
+                    return this.cache.data[type];
+                }
+
+                try {
+                    const response = await fetch(API_CONFIG[type]);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error(`Error fetching ${type}:`, error);
+                    this.showToast('网络请求失败，使用本地数据');
+                    return this.cache.data[type];
+                }
+            }
+
+            async refreshContent() {
+                if (this.isLoading) return this.cache.data;
+                
+                const now = Date.now();
+                if (now - this.cache.timestamp < CACHE_CONFIG.maxAge) {
+                    return this.cache.data;
+                }
+
+                this.isLoading = true;
+                this.showLoadingState(true);
+
+                try {
+                    const [riddles, proverbs, trivia] = await Promise.all([
+                        this.fetchContent('riddles'),
+                        this.fetchContent('proverbs'),
+                        this.fetchContent('trivia')
+                    ]);
+
+                    const newData = {
+                        riddles: riddles || this.cache.data.riddles,
+                        proverbs: proverbs || this.cache.data.proverbs,
+                        trivia: trivia || this.cache.data.trivia
+                    };
+
+                    this.saveCache(newData);
+                    return newData;
+                } catch (error) {
+                    console.error('Error refreshing content:', error);
+                    return this.cache.data;
+                } finally {
+                    this.isLoading = false;
+                    this.showLoadingState(false);
+                }
+            }
+
+            showLoadingState(isLoading) {
+                const searchButton = document.querySelector('.search-button');
+                if (searchButton) {
+                    if (isLoading) {
+                        searchButton.disabled = true;
+                        searchButton.innerHTML = '<span class="loading-spinner"></span>';
+                    } else {
+                        searchButton.disabled = false;
+                        searchButton.textContent = '搜索';
+                    }
+                }
+            }
+        }
+
+        // 初始化内容管理器
+        const contentManager = new ContentManager();
+
+        // 修改搜索函数，加入实时内容
+        async function search() {
+            const searchTerm = document.getElementById('search-input').value;
+            if (searchTerm.trim() !== '') {
+                // 定义触发关键词数组
+                const loveKeywords = ['情', '爱', '辉', '0819', '0519', '0324'];
+                const jokeKeyword = '好玩';
+                const parentingKeyword = '无忧';
+                const aboutKeyword = '这是啥';
+                
+                // 检查是否包含触发关键词
+                const shouldShowLove = loveKeywords.some(keyword => 
+                    searchTerm.toLowerCase().includes(keyword.toLowerCase())
+                );
+                
+                // 精确匹配关键词
+                const shouldShowJoke = searchTerm.includes(jokeKeyword);
+                const shouldShowParenting = searchTerm.includes(parentingKeyword);
+                const shouldShowAbout = searchTerm.includes(aboutKeyword);
+                
+                if (shouldShowLove) {
+                    window.location.href = 'love.html';
+                } else if (shouldShowJoke) {
+                    window.location.href = 'joke.html';
+                } else if (shouldShowParenting) {
+                    window.location.href = 'parenting.html';
+                } else if (shouldShowAbout) {
+                    window.location.href = 'about.html';
+                } else {
+                    try {
+                        // 先尝试使用夸克搜索
+                        const quarkResponse = await fetch(`https://quark.sm.cn/s?q=${encodeURIComponent(searchTerm)}`);
+                        if (quarkResponse.ok) {
+                            window.location.href = `https://quark.sm.cn/s?q=${encodeURIComponent(searchTerm)}`;
+                        } else {
+                            // 如果夸克失效，使用百度
+                            window.location.href = `https://www.baidu.com/s?wd=${encodeURIComponent(searchTerm)}`;
+                        }
+                    } catch (error) {
+                        // 发生错误时使用百度
+                        window.location.href = `https://www.baidu.com/s?wd=${encodeURIComponent(searchTerm)}`;
+                    }
+                }
+            }
+        }
+
+        // 定期刷新内容
+        setInterval(async () => {
+            await contentManager.refreshContent();
+        }, CACHE_CONFIG.maxAge);
+
+        // 页面加载时新一次内容
+        window.addEventListener('load', async () => {
+            await contentManager.refreshContent();
+        });
+
+        // 添加样式
+        const style = document.createElement('style');
+        style.textContent = `
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%) translateY(100px);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 24px;
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .toast.show {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            .loading-spinner {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 2px solid rgba(255,255,255,0.3);
+                border-radius: 50%;
+                border-top-color: white;
+                animation: spin 1s ease-in-out infinite;
+            }
+
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 添加回车搜索
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                search();
+            }
+        });
+
+        // 优化搜索框焦点效果
+        document.getElementById('search-input').addEventListener('focus', function() {
+            this.placeholder = '输入关键词，按回车搜索...';
+        });
+
+        document.getElementById('search-input').addEventListener('blur', function() {
+            this.placeholder = '输入关键词...';
+        });
+
+        // 计时器功能
+        function updateTimer() {
+            const startDate = new Date('2022-08-19T00:00:00');
+            const now = new Date();
+            const diff = now - startDate;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            const milliseconds = diff % 1000;
+            
+            const timerElement = document.getElementById('love-timer');
+            if (timerElement) {
+                timerElement.textContent = `${days}天 ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(milliseconds).padStart(3, '0')}`;
+            }
+        }
+        
+        updateTimer();
+        const timerInterval = setInterval(updateTimer, 10);
+
+        // 更新时间显示
+        function updateDateTime() {
+            const now = new Date();
+            const timeElement = document.getElementById('current-time');
+            const lunarElement = document.getElementById('lunar-info');
+            
+            if (!timeElement || !lunarElement) return;
+            
+            // 格式化时间
+            const timeStr = now.toLocaleString('zh-CN', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            // 获取农历信息
+            const lunar = Lunar.fromDate(now);
+            const jieQi = lunar.getJieQi();
+            const yinYang = lunar.getYearNaYin();
+            const dayYi = lunar.getDayYi();
+            const dayJi = lunar.getDayJi();
+            
+            timeElement.textContent = timeStr;
+            lunarElement.innerHTML = `
+                ${lunar.getYearInGanZhi()}年 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()} 
+                ${jieQi ? jieQi : ''} ${yinYang}<br>
+                <span style="color: #4CAF50">宜：${dayYi.length > 0 ? dayYi[0] : '无'}</span> 
+                <span style="color: #F44336">忌：${dayJi.length > 0 ? dayJi[0] : '无'}</span>
+            `;
+        }
+        
+        updateDateTime();
+        const dateTimeInterval = setInterval(updateDateTime, 1000);
+
+        // 页面卸载时清理定时器
+        window.addEventListener('unload', () => {
+            clearInterval(timerInterval);
+            clearInterval(dateTimeInterval);
+        });
+
+        // 确保DOM加载完成后再初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 检查并创建时间容器
+            if (!document.querySelector('.time-container')) {
+                const timeContainer = document.createElement('div');
+                timeContainer.className = 'time-container';
+                timeContainer.innerHTML = `
+                    <div id="current-time" class="current-time"></div>
+                    <div id="lunar-info" class="lunar-info"></div>
+                `;
+                document.body.appendChild(timeContainer);
+            }
+
+            // 检查并创建计时器容器
+            if (!document.querySelector('.timer-container')) {
+                const timerContainer = document.createElement('div');
+                timerContainer.className = 'timer-container';
+                timerContainer.innerHTML = `
+                    <div class="timer-label">在一起已经</div>
+                    <div id="love-timer"></div>
+                `;
+                document.body.appendChild(timerContainer);
+            }
+
+            updateTimer();
+            updateDateTime();
+        });
+
+        // 在 script 部分添加雪花生成逻辑
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆', '✧', '✦'];
+            const container = document.body;
+            
+            setInterval(() => {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                
+                container.appendChild(snowflake);
+                
+                setTimeout(() => snowflake.remove(), 5000);
+            }, 200);
+        }
+        
+        createSnowflakes();
+
+        // 在 script 部分添加鼠标拖尾逻辑
+        function createTrail(e) {
+            const trail = document.createElement('div');
+            trail.className = 'mouse-trail';
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
+            document.body.appendChild(trail);
+            
+            setTimeout(() => trail.remove(), 1000);
+        }
+        
+        document.addEventListener('mousemove', throttle(createTrail, 20));
+        
+        function throttle(func, limit) {
+            let inThrottle;
+            return function(e) {
+                if (!inThrottle) {
+                    func(e);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

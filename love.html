@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圣诞惊喜</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <style>
+        /* 页面布局 */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #ffe6e6, #ffb3b3, #ff99cc, #ff80bf);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            transform: translateZ(0);
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+
+        /* 添加氛围光效 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, 
+                rgba(255, 153, 204, 0.2) 0%,
+                rgba(255, 153, 204, 0.1) 20%,
+                transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+            animation: glowPulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+
+        /* 上部分：弹幕区域 */
+        .danmaku-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            overflow: hidden;
+            mask-image: linear-gradient(
+                to bottom,
+                transparent 0%,
+                black 10%,
+                black 90%,
+                transparent 100%
+            );
+            -webkit-mask-image: linear-gradient(
+                to bottom,
+                transparent 0%,
+                black 10%,
+                black 90%,
+                transparent 100%
+            );
+        }
+
+        /* 中部分：情话区域 */
+        .middle-section {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .love-container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 77, 77, 0.2),
+                        0 0 50px rgba(255, 153, 204, 0.3);
+            max-width: 600px;
+            will-change: transform;
+            backface-visibility: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .love-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 77, 77, 0.15);
+        }
+
+        .love-text {
+            font-size: 1.5rem;
+            color: #ff4d4d;
+            margin: 20px;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-text {
+            display: inline-block;
+            opacity: 0;
+            animation: none;
+            will-change: opacity, transform;
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+
+        .translation {
+            display: block;
+            opacity: 0;
+            font-size: 1.2rem;
+            color: #ff8080;
+            margin-top: 10px;
+            will-change: opacity;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to { 
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeInTranslation {
+            from { 
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to { 
+                opacity: 0.8;
+                transform: translateY(0);
+            }
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.8));
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8),
+                        0 0 20px rgba(255, 0, 0, 0.5),
+                        0 0 30px rgba(255, 0, 0, 0.3);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(20deg); }
+        }
+
+        .new-quote {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .new-quote:hover {
+            background: #ff3333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 77, 77, 0.2);
+        }
+
+        .new-quote:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 6px rgba(255, 77, 77, 0.1);
+        }
+
+        /* 点击波纹效果 */
+        .new-quote::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .new-quote:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(100, 100);
+                opacity: 0;
+            }
+        }
+
+        .mouse-emoji {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            z-index: 1000;
+            animation: floatUp 1s ease-out forwards;
+            will-change: transform, opacity;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-50px) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* 添加返回首页按钮 */
+        .home-button {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: linear-gradient(120deg, rgba(255, 77, 77, 0.1), rgba(255, 77, 77, 0.2));
+            backdrop-filter: blur(8px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            color: #ff4d4d;
+            opacity: 0;
+            cursor: pointer;
+            font-family: 'Ma Shan Zheng', cursive;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .home-button:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #ff4d4d, #ff3333);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
+        }
+
+        body:hover .home-button {
+            opacity: 0.6;
+        }
+
+        /* 弹幕样式 */
+        .danmaku {
+            position: absolute;
+            white-space: nowrap;
+            animation: moveLeft var(--duration, 15s) linear;
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Ma Shan Zheng', cursive;
+            text-shadow: 0 2px 4px rgba(255, 102, 179, 0.3);
+            transform: translateZ(var(--depth));
+            filter: blur(var(--blur));
+            opacity: var(--opacity);
+            font-size: var(--size);
+            line-height: 1.8;
+            padding: 5px 0;
+        }
+
+        @keyframes moveLeft {
+            from {
+                transform: translate3d(100%, 0, var(--depth));
+            }
+            to {
+                transform: translate3d(-100%, 0, var(--depth));
+            }
+        }
+
+        /* 添加网络请求状态提示 */
+        .loading-tips {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-family: 'Ma Shan Zheng', cursive;
+            color: #ff6699;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+
+        .loading-tips.show {
+            opacity: 1;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .timer-container {
+                margin-top: 20px;
+                font-size: 0.9rem;
+                padding: 5px 10px;
+            }
+        }
+
+        /* PC端弹幕优化 */
+        @media (min-width: 1024px) {
+            .danmaku-container {
+                min-height: 300px;
+            }
+
+            .danmaku {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* 大屏幕优化 */
+        @media (min-width: 1440px) {
+            .danmaku-container {
+                min-height: 400px;
+            }
+        }
+
+        /* 弹幕轨道管理 */
+        .danmaku-lane {
+            position: absolute;
+            width: 100%;
+            height: var(--lane-height);
+            left: 0;
+            top: var(--lane-top);
+            overflow: hidden;
+        }
+
+        /* 弹幕出现动画 */
+        @keyframes fadeInDanmaku {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: var(--opacity);
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 上部分：弹幕区域 -->
+    <div class="danmaku-container"></div>
+    
+    <!-- 中部分：情话区域 -->
+    <div class="middle-section">
+        <div class="love-container">
+            <div class="love-text" id="love-quote"></div>
+            <button class="new-quote" onclick="generateQuote()">再来一个</button>
+        </div>
+    </div>
+    
+    <button class="home-button" onclick="goHome()">返回首页</button>
+
+    <script>
+        // 添加返回首页函数
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        const loveQuotes = [
+            "愿你的眼睛永远有星辰大海，胜过世间所有的美 ✨",
+            "May you be my today and all of my tomorrows ❤️\n「愿你成为我的今天和所有的明天」",
+            "想把所有的温柔都给你，就像冬日里的暖阳 🌞",
+            "The snow is falling, my love for you is calling 🎄\n「雪花纷飞，我对你的爱在呼唤」",
+            "愿我们的故事，写满整个冬季 ⛄",
+            "You are the miracle I've been dreaming of 🎁\n「你是我梦寐以求的奇迹」",
+            "平安夜的钟声里，许下了我们的约定 🔔",
+            "In every snowflake, I see your smile 💫\n「在每一片雪花中，我都看到你的微笑」",
+            "愿你的每个圣诞都被温暖包围 🎄",
+            "Like stars in winter nights, you light up my world 🌟\n「如同冬夜里的星星，你点亮了我的世界」",
+            "想和你一起数落下的雪花，直到春天到来 ❄️",
+            "Your heart is the best Christmas gift ever 🎀\n「你的心是最好的圣诞礼物」",
+            "愿我们的爱，如圣诞树上的星光永恒闪耀 ⭐",
+            "Together we make winter warmer than spring 🌸\n「在一起的我们让冬天比春天还要温暖」",
+            "平安夜的祝福都给你，愿你永远被爱环绕 💝",
+            "愿你的每个圣诞都被欢乐与幸福环绕 🎅",
+            "You're the Christmas magic I've been waiting for 🎄\n「你是我一直在等待的圣诞法」",
+            "与你相遇，是这个冬天最温暖的事 ☃️",
+            "Every moment with you feels like Christmas morning 🎁\n「和你在一起的每一刻都像圣诞早晨」",
+            "愿我们的爱，如圣诞彩灯永远闪耀 ✨",
+            "You make my winter wonderland complete 🌨️\n「有你，我的冬日童话才完整」",
+            "想在平安夜的钟声里，许下与你相守的心愿 🔔",
+            "My Christmas wish is to hold your hand through every season 🎅\n「我的圣诞愿望是牵着你的手走过四季」",
+            "愿我们的爱，如圣诞颂歌般悠扬动听 🎵",
+            "In this winter symphony, you're my favorite melody 🎼\n「在这冬日交响曲中，你是我最爱的旋律」",
+            "想把整个冬天的浪漫都送给你 💖",
+            "You're the warmth in my December days ⛄\n「你是我十二月里的温暖」",
+            "愿我们的故事，像圣诞童话一样美好 📖",
+            "Each snowflake brings a piece of my love to you 💝\n「每一片雪花都带着我的爱飘向你」",
+            "想和你一起，把温暖酿成整个冬季 ☕",
+            "You make every Christmas light shine brighter 🌟\n「因为你，每盏圣诞灯都更加明亮」",
+            "愿你的笑容，比圣诞树顶的星星还要闪亮 ⭐",
+            "My winter days are warmer with your love 🌞\n「有了你的爱，我的冬不再寒冷」",
+            "想在飘雪的季节，轻轻诉说你的思念 ❄️",
+            "You're the joy in my Christmas carol 🎶\n「你是我圣诞颂歌里的欢乐」"
+        ];
+
+        const RAF = window.requestAnimationFrame || 
+                   window.webkitRequestAnimationFrame || 
+                   window.mozRequestAnimationFrame;
+        
+        const fragment = document.createDocumentFragment();
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 存储已显示的情话
+        let shownQuotes = new Set();
+        
+        // 弹幕相关变量
+        const danmakuContainer = document.querySelector('.danmaku-container');
+        const danmakuLanes = 10; // 弹幕轨道数
+        const laneHeight = window.innerHeight / danmakuLanes;
+        let activeLanes = new Array(danmakuLanes).fill(false);
+
+        // 创建弹幕
+        function createDanmaku(text) {
+            // 创建轨道容器
+            const lane = document.createElement('div');
+            lane.className = 'danmaku-lane';
+            const laneIndex = Math.floor(Math.random() * DANMAKU_CONFIG.lanes);
+            lane.style.cssText = `
+                --lane-height: ${100 / DANMAKU_CONFIG.lanes}%;
+                --lane-top: ${(laneIndex / DANMAKU_CONFIG.lanes) * 100}%;
+            `;
+
+            const danmaku = document.createElement('div');
+            danmaku.className = 'danmaku';
+            danmaku.textContent = text;
+            
+            // 随机样式
+            const depth = Math.random() * (DANMAKU_CONFIG.maxDepth - DANMAKU_CONFIG.minDepth) + DANMAKU_CONFIG.minDepth;
+            const size = Math.random() * (DANMAKU_CONFIG.maxSize - DANMAKU_CONFIG.minSize) + DANMAKU_CONFIG.minSize;
+            const duration = Math.random() * (DANMAKU_CONFIG.maxDuration - DANMAKU_CONFIG.minDuration) + DANMAKU_CONFIG.minDuration;
+
+            danmaku.style.cssText = `
+                --depth: ${depth}px;
+                --size: ${size}px;
+                --duration: ${duration}s;
+                --blur: ${Math.abs(depth) / 100}px;
+                --opacity: ${1 - Math.abs(depth) / 200};
+            `;
+
+            lane.appendChild(danmaku);
+            document.querySelector('.danmaku-container').appendChild(lane);
+
+            // 动画结束后移除轨道
+            danmaku.addEventListener('animationend', () => {
+                lane.remove();
+            });
+
+            return lane;
+        }
+
+        function generateQuote() {
+            const quoteElement = document.getElementById('love-quote');
+            if (quoteElement.dataset.animating === 'true') return;
+            
+            if (window.translationTimer) {
+                clearTimeout(window.translationTimer);
+            }
+            
+            if (quoteElement.innerHTML) {
+                quoteElement.dataset.animating = 'true';
+                const oldQuoteText = quoteElement.querySelector('.quote-text');
+                const oldTranslation = quoteElement.querySelector('.translation');
+                if (oldQuoteText) {
+                    oldQuoteText.style.animation = 'fadeOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                }
+                if (oldTranslation) {
+                    oldTranslation.style.animation = 'fadeOut 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                }
+                
+                setTimeout(() => {
+                    const randomQuote = loveQuotes[Math.floor(Math.random() * loveQuotes.length)];
+                    const newQuoteText = document.createElement('span');
+                    newQuoteText.className = 'quote-text';
+                    const [english, translation] = randomQuote.split('\n');
+                    newQuoteText.innerHTML = english;
+                    newQuoteText.style.animation = 'fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                    quoteElement.innerHTML = '';
+                    quoteElement.appendChild(newQuoteText);
+                    
+                    if (translation) {
+                        const translationText = document.createElement('div');
+                        translationText.className = 'translation';
+                        translationText.innerHTML = translation;
+                        quoteElement.appendChild(translationText);
+                        
+                        window.translationTimer = setTimeout(() => {
+                            translationText.style.animation = 'fadeInTranslation 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                        }, 1000);
+                    }
+                    
+                    createHeart();
+                    setTimeout(() => {
+                        quoteElement.dataset.animating = 'false';
+                    }, 800);
+                }, 800);
+            } else {
+                const randomQuote = loveQuotes[Math.floor(Math.random() * loveQuotes.length)];
+                const newQuoteText = document.createElement('span');
+                newQuoteText.className = 'quote-text';
+                const [english, translation] = randomQuote.split('\n');
+                newQuoteText.innerHTML = english;
+                newQuoteText.style.animation = 'fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                quoteElement.appendChild(newQuoteText);
+                
+                if (translation) {
+                    const translationText = document.createElement('div');
+                    translationText.className = 'translation';
+                    translationText.innerHTML = translation;
+                    quoteElement.appendChild(translationText);
+                    
+                    window.translationTimer = setTimeout(() => {
+                        translationText.style.animation = 'fadeInTranslation 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                    }, 1000);
+                }
+                
+                createHeart();
+            }
+
+            // 在显示新情话后，将其添加到已显示集合并创建弹幕
+            const randomQuote = loveQuotes[Math.floor(Math.random() * loveQuotes.length)];
+            const [english] = randomQuote.split('\n');
+            if (!shownQuotes.has(english)) {
+                shownQuotes.add(english);
+                setTimeout(() => createDanmaku(english), 1000);
+            }
+
+            // 定期发送已显示的情话作为弹幕
+            if (shownQuotes.size > 3) {
+                const interval = window.innerWidth > 1440 ? 4000 :
+                                window.innerWidth > 1024 ? 3500 : 3000;
+                setInterval(() => {
+                    const quotes = Array.from(shownQuotes);
+                    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                    createDanmaku(randomQuote);
+                }, interval);
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = Math.random() * window.innerHeight + 'px';
+            const size = Math.random() * 1 + 1.5;
+            heart.style.transform = `scale(${size})`;
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 3000);
+        }
+
+        // 初生成一句情话
+        generateQuote();
+        
+        // 每隔一段时间自动生成心形
+        setInterval(() => createHeart(), 2000);
+
+        // 添加鼠标移动emoji效果
+        const christmasEmojis = ['🎅', '🎄', '🎁', '⛄', '🦌', '🔔', '🎉', '❄️', '🍪', '🥛'];
+        let lastEmojiTime = 0;
+
+        const createEmoji = debounce((e) => {
+            const now = Date.now();
+            if (now - lastEmojiTime < 50) return;
+            lastEmojiTime = now;
+
+            const emoji = document.createElement('div');
+            emoji.className = 'mouse-emoji';
+            emoji.style.left = (e.clientX - 10) + 'px';
+            emoji.style.top = (e.clientY - 10) + 'px';
+            emoji.innerHTML = christmasEmojis[Math.floor(Math.random() * christmasEmojis.length)];
+            
+            fragment.appendChild(emoji);
+            RAF(() => {
+                document.body.appendChild(fragment);
+            });
+            
+            setTimeout(() => {
+                emoji.remove();
+            }, 1000);
+        }, 16);  // 约60fps
+
+        document.addEventListener('mousemove', createEmoji, { passive: true });
+
+        // 情话API配置
+        const LOVE_WORDS_API = 'https://api.example.com/love-words';
+        const FALLBACK_WORDS = [
+            "遇见你是我所有美好故事的开始",
+            "喜欢你是我做过最好的决定",
+            // ... 原有的情话数据
+        ];
+
+        // 弹幕配置
+        const DANMAKU_CONFIG = {
+            minSize: 16,
+            maxSize: 24,
+            minDuration: 10,
+            maxDuration: 20,
+            lanes: 10,
+            minDepth: -100,
+            maxDepth: 100,
+        };
+
+        // 获取情话数据
+        async function fetchLoveWords() {
+            const loadingTips = document.createElement('div');
+            loadingTips.className = 'loading-tips';
+            loadingTips.textContent = '正在获取最新情话...';
+            document.body.appendChild(loadingTips);
+
+            try {
+                const response = await fetch(LOVE_WORDS_API);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                loadingTips.textContent = '获取成功！';
+                setTimeout(() => loadingTips.remove(), 1000);
+                return data;
+            } catch (error) {
+                console.error('Error fetching love words:', error);
+                loadingTips.textContent = '使用本地情话数据';
+                setTimeout(() => loadingTips.remove(), 1000);
+                return FALLBACK_WORDS;
+            }
+        }
+
+        // 初始化弹幕系统
+        async function initDanmaku() {
+            const container = document.querySelector('.danmaku-container');
+            const words = await fetchLoveWords();
+            let index = 0;
+
+            function addDanmaku() {
+                const text = words[index % words.length];
+                const danmaku = createDanmaku(text);
+                container.appendChild(danmaku);
+                index++;
+
+                danmaku.addEventListener('animationend', () => {
+                    danmaku.remove();
+                });
+            }
+
+            // 适应设备性能的发送间隔
+            const interval = window.matchMedia('(max-width: 768px)').matches ? 2000 : 1000;
+            setInterval(addDanmaku, interval);
+            addDanmaku(); // 立即添加第一条
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initDanmaku);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,137 @@
+/* 基础优化 */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+}
+
+/* 大屏幕适配 (1440px 以上) */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: clamp(4em, 8vw, 10em);
+    }
+
+    .timer-container, .time-container {
+        transform: scale(1.2);
+    }
+}
+
+/* 平板适配 (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: clamp(3em, 6vw, 8em);
+    }
+
+    .search-box {
+        width: 90%;
+        margin: 20px auto;
+    }
+}
+
+/* 移动端适配 (768px 以下) */
+@media (max-width: 767px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 0.5rem;
+    }
+
+    h1 {
+        font-size: clamp(2em, 4vw, 6em);
+    }
+
+    .search-box {
+        width: 95%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #search-input {
+        width: 100%;
+        font-size: 1em;
+        padding: 12px 20px;
+    }
+
+    .timer-container, .time-container {
+        width: 90%;
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+
+    .home-button {
+        right: 10px;
+        bottom: 10px;
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) {
+    .interactive-element {
+        transition: none;
+    }
+
+    .interactive-element:hover {
+        transform: none !important;
+    }
+
+    .mouse-emoji {
+        display: none;
+    }
+
+    .home-button {
+        opacity: 0.8;
+    }
+
+    .home-button:hover {
+        transform: none;
+    }
+}
+
+/* 动画性能优化 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .container {
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .timer-container, .time-container {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #ff0066;
+        --text-color: #000000;
+    }
+}
+
+/* 打印样式优化 */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+} 
