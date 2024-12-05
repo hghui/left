@@ -344,23 +344,41 @@ body {
     .timer-section {
         padding: 1.5rem;
         margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .time-display,
     .love-timer {
         padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     }
 
     .current-time {
         font-size: 2em;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
     }
 
     .lunar-info {
         font-size: 1em;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .timer-label {
+        color: rgba(255, 255, 255, 0.7);
     }
 
     #love-timer {
         font-size: 1.5em;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
     }
 
     .features-section {
@@ -441,6 +459,41 @@ body {
         box-sizing: border-box;
         opacity: 1;
         visibility: visible;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* 添加渐变边框效果 */
+    .timer-section::before,
+    .time-display::before,
+    .love-timer::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        padding: 1px;
+        background: linear-gradient(135deg,
+            rgba(255, 102, 179, 0.2),
+            rgba(77, 148, 255, 0.2)
+        );
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    /* 悬浮效果 */
+    .timer-section:hover::before,
+    .time-display:hover::before,
+    .love-timer:hover::before {
+        opacity: 1;
     }
 }
 
