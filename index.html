@@ -443,14 +443,14 @@
             }
         }
 
-        /* 更新弹窗相关样式 */
+        /* 更新弹窗相关样式，保持项目风格一致 */
         .greeting-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 204, 230, 0.3);
+            background: linear-gradient(-45deg, rgba(255, 204, 230, 0.3), rgba(179, 224, 255, 0.3));
             backdrop-filter: blur(8px);
             z-index: 9998;
             opacity: 0;
@@ -465,19 +465,19 @@
             z-index: 9999;
             opacity: 0;
             animation: greetingPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            width: min(90vw, 500px);
+            margin: 0 auto;
         }
 
         .greeting-content {
             background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
             backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 15px 50px rgba(255, 102, 179, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            min-width: 320px;
-            max-width: 90vw;
-            transform-origin: center center;
+            padding: 25px;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             font-family: 'Ma Shan Zheng', cursive;
+            transform: rotate(-1deg);
         }
 
         .greeting-header {
@@ -493,15 +493,21 @@
             background-clip: text;
             color: transparent;
             margin: 0;
-            padding: 0;
             filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
+            letter-spacing: 2px;
         }
 
         .greeting-time {
-            font-size: 1.2em;
-            color: #666;
-            margin: 10px 0;
+            font-size: 1.5em;
+            margin: 15px 0;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
             text-align: center;
+            font-weight: 500;
+            letter-spacing: 2px;
+            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
         }
 
         .greeting-content p {
@@ -516,39 +522,44 @@
             color: #4d94ff !important;
             font-size: 1.1em !important;
             margin-top: 15px !important;
+            filter: drop-shadow(0 2px 4px rgba(77, 148, 255, 0.2));
         }
 
         .greeting-close {
             position: absolute;
-            top: -10px;
-            right: -10px;
+            top: -15px;
+            right: -15px;
             background: linear-gradient(120deg, #ff99cc, #99ccff);
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             color: white;
             font-size: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 15px rgba(255, 153, 204, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .greeting-close:hover {
-            transform: scale(1.1) rotate(90deg);
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 153, 204, 0.4);
         }
 
         @keyframes greetingPopIn {
             0% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8) rotate(-5deg);
+                transform: translate(-50%, -50%) scale(0.8) rotate(-3deg);
             }
             50% {
                 transform: translate(-50%, -50%) scale(1.05) rotate(2deg);
             }
             100% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                transform: translate(-50%, -50%) scale(1) rotate(-1deg);
             }
         }
 
@@ -559,16 +570,35 @@
         @keyframes greetingFadeOut {
             0% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                transform: translate(-50%, -50%) scale(1) rotate(-1deg);
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8) rotate(5deg);
+                transform: translate(-50%, -50%) scale(0.8) rotate(3deg);
+            }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .greeting-content {
+                padding: 20px;
+            }
+
+            .greeting-header h3 {
+                font-size: 1.5em;
+            }
+
+            .greeting-time {
+                font-size: 1.2em;
+            }
+
+            .greeting-content p {
+                font-size: 1.1em;
             }
         }
     </style>
     <meta name="description" content="一个温馨的育儿知识分享平台，提供专业的育儿建议和知识">
-    <meta name="keywords" content="儿,育儿知识,���儿建议,婴儿护理,儿童保健">
+    <meta name="keywords" content="儿,育儿知识,儿建议,婴儿护理,儿童保健">
     <link rel="canonical" href="https://your-domain.com/index.html">
 </head>
 <body>
@@ -605,7 +635,7 @@
         // 默认的本地数据
         const DEFAULT_DATA = {
             riddles: [
-                "灯谜：'四季平安（打���个字）'\n「春：有四个季，上下都是平安」🏮",
+                "灯谜：'四季平安（打个字）'\n「春：有四个季，上下都是平安」🏮",
                 "灯谜：'小姐上轿（打一个字）'\n「娶：上面是女，下面是取」💝",
                 // ... 其他灯谜数据
             ],
@@ -1027,7 +1057,7 @@
             }
         }
 
-        // 修改 showWelcomeMessage 函数
+        // 改 showWelcomeMessage 函数
         async function showWelcomeMessage() {
             try {
                 // 使用提供的 API 获取数据
@@ -1095,8 +1125,51 @@
                     }, 300);
                 };
 
+                // 添加触摸事件支持
                 closeButton.addEventListener('click', close);
+                closeButton.addEventListener('touchend', (e) => {
+                    e.preventDefault(); // 防止触摸穿透
+                    close();
+                });
+
+                // 优化遮罩层点击/触摸
                 overlay.addEventListener('click', close);
+                overlay.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    if (e.target === overlay) {
+                        close();
+                    }
+                });
+
+                // 添加键盘支持
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && document.body.contains(popup)) {
+                        close();
+                    }
+                });
+
+                // 防止弹窗内容滚动穿透
+                const preventScroll = (e) => {
+                    if (!popup.contains(e.target)) {
+                        e.preventDefault();
+                    }
+                };
+                
+                document.body.style.overflow = 'hidden';
+                document.addEventListener('touchmove', preventScroll, { passive: false });
+
+                // 清理函数
+                const cleanup = () => {
+                    document.body.style.overflow = '';
+                    document.removeEventListener('touchmove', preventScroll);
+                };
+
+                // 在关闭时清理
+                const originalClose = close;
+                close = () => {
+                    cleanup();
+                    originalClose();
+                };
 
                 // 5秒后自动关闭
                 setTimeout(() => {
@@ -1109,7 +1182,7 @@
             }
         }
 
-        // 确���在 DOM 加载完成后立即显示弹窗
+        // 确在 DOM 加载完成后立即显示弹窗
         document.addEventListener('DOMContentLoaded', showWelcomeMessage);
     </script>
 </body>
