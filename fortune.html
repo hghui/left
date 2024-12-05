@@ -32,12 +32,10 @@
             width: 90%;
             margin: 20px auto;
             padding: clamp(20px, 3vw, 40px);
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transform: rotate(-1deg);
+            display: grid;
+            gap: 25px;
+            opacity: 0;
+            animation: containerFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         h1 {
@@ -49,6 +47,21 @@
             color: transparent;
             margin-bottom: 30px;
             filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 10px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff66b3, #4d94ff);
+            transform: translateX(-100%);
+            animation: titleLine 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.3s;
         }
 
         .fortune-content {
@@ -197,69 +210,131 @@
 
         .fortune-extras {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 25px;
         }
 
         .extra-item {
-            text-align: center;
-            padding: 10px;
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6));
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .extra-item:hover {
+            transform: translateY(-5px);
         }
 
         .extra-label {
             color: #666;
-            font-size: 0.9em;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            text-align: left;
         }
 
         .extra-value {
+            position: relative;
             display: block;
-            margin-top: 5px;
-            font-size: 1.1em;
-            color: #ff66b3;
+            font-size: 1.4em;
+            margin-top: 8px;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: left;
+            padding-bottom: 10px;
+        }
+
+        .extra-value::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff66b3, #4d94ff);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: progressSlide 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.5s;
         }
 
         @media (max-width: 768px) {
-            .fortune-stats {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-            
             .fortune-extras {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .extra-item {
+                padding: 15px;
+            }
+
+            .extra-label {
+                font-size: 1em;
+            }
+
+            .extra-value {
+                font-size: 1.3em;
             }
         }
 
         /* 添加加载动画样式 */
         .loading-container {
-            text-align: center;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            gap: 20px;
         }
 
         .loading-spinner {
-            display: inline-block;
             width: 50px;
             height: 50px;
             border: 3px solid rgba(255, 102, 179, 0.1);
             border-radius: 50%;
             border-top-color: #ff66b3;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 102, 179, 0.2));
         }
 
         .loading-text {
-            margin-top: 15px;
-            color: #666;
-            font-size: 1.1em;
+            font-size: 1.2em;
             background: linear-gradient(45deg, #ff66b3, #4d94ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
         }
 
         .fortune-content {
@@ -529,7 +604,7 @@
             backface-visibility: hidden;
         }
 
-        /* 减少��画在低性能设备上的复杂度 */
+        /* 减少画在低性能设备上的复杂度 */
         @media (prefers-reduced-motion: reduce) {
             .fortune-card {
                 animation-duration: 0.2s;
@@ -556,6 +631,364 @@
                 background: rgba(255, 255, 255, 0.4);
             }
         }
+
+        /* 添加或更新以下样式 */
+        .fortune-container {
+            max-width: 1200px;
+            width: 90%;
+            margin: 20px auto;
+            padding: clamp(20px, 3vw, 40px);
+            display: grid;
+            gap: 25px;
+            opacity: 0;
+            animation: containerFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* 标题动画优化 */
+        h1 {
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 10px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #ff66b3, #4d94ff);
+            transform: translateX(-100%);
+            animation: titleLine 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.3s;
+        }
+
+        /* 卡片容器样式优化 */
+        .fortune-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 4px 25px rgba(255, 182, 193, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fortune-card.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* 载动画优化 */
+        .loading-container {
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .loading-spinner {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+
+        .loading-spinner::before,
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-spinner::before {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .loading-spinner::after {
+            width: 80%;
+            height: 80%;
+            background: white;
+            top: 10%;
+            left: 10%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-text {
+            font-size: 1.2em;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: textPulse 1.5s ease-in-out infinite;
+        }
+
+        /* 运势指数卡片优化 */
+        .stat-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-value {
+            position: relative;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff66b3, #4d94ff);
+            border-radius: 2px;
+            transform: translateX(-100%);
+            animation: progressSlide 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* 幸运指引卡片优化 */
+        .extra-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .extra-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        /* 动画定义 */
+        @keyframes containerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes titleLine {
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes progressSlide {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+            100% {
+                transform: translate(150%, 150%) rotate(45deg);
+            }
+        }
+
+        @keyframes textPulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(0.98);
+            }
+        }
+
+        /* 打断动画处理 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .fortune-card {
+                padding: 20px;
+            }
+
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+            }
+
+            .stat-item {
+                transform: none !important;
+            }
+
+            .extra-item::before {
+                display: none;
+            }
+        }
+
+        /* 更新幸运指引卡片样式 */
+        .fortune-extras {
+            margin-top: 25px;
+        }
+
+        .fortune-extras .fortune-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .fortune-extras .stat-item {
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fortune-extras .stat-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.25);
+        }
+
+        .fortune-extras .stat-label {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .fortune-extras .stat-value {
+            position: relative;
+            z-index: 1;
+        }
+
+        .fortune-extras .value-text {
+            font-size: 1.4em;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: block;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .fortune-extras .stat-item:hover .value-text {
+            transform: scale(1.1);
+        }
+
+        /* 添加装饰效果 */
+        .fortune-extras .stat-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: 0.6s;
+            opacity: 0;
+        }
+
+        .fortune-extras .stat-item:hover::before {
+            animation: shine 1.5s ease-out;
+            opacity: 1;
+        }
+
+        /* 添加进度条动画 */
+        .fortune-extras .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #ff66b3, #4d94ff);
+            border-radius: 2px;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fortune-extras .stat-item.show .progress-bar {
+            transform: scaleX(1);
+        }
+
+        /* 添加动画关键帧 */
+        @keyframes shine {
+            0% {
+                transform: translate(-50%, -50%) rotate(45deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(150%, 150%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .fortune-extras .fortune-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .fortune-extras .stat-item {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .fortune-extras .fortune-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 触摸设备优化 */
+        @media (hover: none) {
+            .fortune-extras .stat-item:active {
+                transform: scale(0.98);
+            }
+            
+            .fortune-extras .stat-item::before {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -576,7 +1009,7 @@
             </div>
             <div class="fortune-item">
                 <h3>财运</h3>
-                <p>财运平稳，适合理财规划。避免冲动消费，可以考虑长期投资。</p>
+                <p>财平稳，适合理财规划。避免冲动消费，可以考虑长期投资。</p>
             </div>
             <div class="fortune-item">
                 <h3>健康运</h3>
@@ -586,7 +1019,7 @@
     </div>
     <a href="index.html" class="home-button" title="返回首页">🏠</a>
     <script>
-        // 默认运势数据
+        // 认运势数据
         const defaultFortuneData = {
             name: "巨蟹座",
             datetime: new Date().toLocaleDateString('zh-CN'),
@@ -601,7 +1034,7 @@
             QFriend: "天秤座"
         };
 
-        // 显示加载动画
+        // 更新加载动画显示函数
         function showLoading() {
             document.querySelector('.fortune-content').innerHTML = `
                 <div class="loading-container">
@@ -611,9 +1044,10 @@
             `;
         }
 
-        // 渲染运势内容
+        // 优化渲染函数
         function renderFortune(data) {
-            document.querySelector('.fortune-content').innerHTML = `
+            const content = document.querySelector('.fortune-content');
+            content.innerHTML = `
                 <div class="fortune-header fortune-card">
                     <span class="date">${data.datetime}</span>
                     <span class="sign">${data.name}</span>
@@ -631,35 +1065,35 @@
                             <div class="stat-label">综合运势</div>
                             <div class="stat-value">
                                 <span class="value-text">${data.all}</span>
-                                <div class="progress-bar" style="width: ${data.all}"></div>
+                                <div class="progress-bar" data-value="${data.all}"></div>
                             </div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">健康运势</div>
                             <div class="stat-value">
                                 <span class="value-text">${data.health}</span>
-                                <div class="progress-bar" style="width: ${data.health}"></div>
+                                <div class="progress-bar" data-value="${data.health}"></div>
                             </div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">爱情运势</div>
                             <div class="stat-value">
                                 <span class="value-text">${data.love}</span>
-                                <div class="progress-bar" style="width: ${data.love}"></div>
+                                <div class="progress-bar" data-value="${data.love}"></div>
                             </div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">财运指数</div>
                             <div class="stat-value">
                                 <span class="value-text">${data.money}</span>
-                                <div class="progress-bar" style="width: ${data.money}"></div>
+                                <div class="progress-bar" data-value="${data.money}"></div>
                             </div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">工作运势</div>
                             <div class="stat-value">
                                 <span class="value-text">${data.work}</span>
-                                <div class="progress-bar" style="width: ${data.work}"></div>
+                                <div class="progress-bar" data-value="${data.work}"></div>
                             </div>
                         </div>
                     </div>
@@ -667,69 +1101,191 @@
 
                 <div class="fortune-extras fortune-card">
                     <h3>幸运指引</h3>
-                    <div class="extras-grid">
-                        <div class="extra-item">
-                            <span class="extra-label">幸运色</span>
-                            <span class="extra-value">
-                                <span class="lucky-color" style="background-color: ${data.color}"></span>
-                                ${data.color}
-                            </span>
+                    <div class="fortune-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">幸运色</div>
+                            <div class="stat-value">
+                                <span class="value-text">${data.color}</span>
+                                <div class="progress-bar"></div>
+                            </div>
                         </div>
-                        <div class="extra-item">
-                            <span class="extra-label">幸运数字</span>
-                            <span class="extra-value">${data.number}</span>
+                        <div class="stat-item">
+                            <div class="stat-label">幸运数字</div>
+                            <div class="stat-value">
+                                <span class="value-text">${data.number}</span>
+                                <div class="progress-bar"></div>
+                            </div>
                         </div>
-                        <div class="extra-item">
-                            <span class="extra-label">速配星座</span>
-                            <span class="extra-value">${data.QFriend}</span>
+                        <div class="stat-item">
+                            <div class="stat-label">速配星座</div>
+                            <div class="stat-value">
+                                <span class="value-text">${data.QFriend}</span>
+                                <div class="progress-bar"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
+
+            // 添加卡片显示动画
+            const cards = content.querySelectorAll('.fortune-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, index * 100);
+            });
+
+            // 添加进度条动画
+            const progressBars = content.querySelectorAll('.progress-bar');
+            progressBars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.width = bar.dataset.value;
+                }, (index + 1) * 200);
+            });
+
+            // 添加动画触发逻辑
+            const statItems = document.querySelectorAll('.fortune-extras .stat-item');
+            statItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('show');
+                }, index * 200);
+            });
         }
 
-        function getFortune() {
-            const sign = '巨蟹座';
-            const key = '4a11bbcbf089edaf14c2d9bdb80c2ec4';
+        // 优化数据加载
+        async function getFortune() {
+            // 检查是否正在加载中
+            if (window.isLoadingFortune) {
+                console.log('运势正在加载中，跳过重复请求');
+                return;
+            }
             
-            // 显示加载动画
+            window.isLoadingFortune = true;
             showLoading();
+            
+            try {
+                const key = '4a11bbcbf089edaf14c2d9bdb80c2ec4';
+                const sign = '巨蟹座';
+                
+                // 记录请求参数
+                console.log('运势请求参数:', {
+                    consName: sign,
+                    type: 'today',
+                    key: key
+                });
 
-            // 设置超时
-            const timeout = setTimeout(() => {
-                console.log('API请求超时，使用默认数据');
-                renderFortune(defaultFortuneData);
-            }, 5000);
+                const script = document.createElement('script');
+                const oldScript = document.querySelector('script[data-fortune]');
+                if (oldScript) {
+                    oldScript.remove();
+                }
 
-            // 创建 JSONP 回调函数
-            window.handleFortuneResponse = function(data) {
-                clearTimeout(timeout);
-                try {
-                    if (data && data.error_code === 0) {
+                script.setAttribute('data-fortune', 'true');
+                const apiUrl = `http://web.juhe.cn:8080/constellation/getAll?consName=${encodeURIComponent(sign)}&type=today&key=${key}&callback=handleFortuneResponse`;
+                script.src = apiUrl;
+
+                // 记录请求URL
+                console.log('运势请求URL:', apiUrl);
+
+                // 修改回调函数，添加清理逻辑
+                window.handleFortuneResponse = function(response) {
+                    // 清理script标签，避免重复加载
+                    const scriptTags = document.querySelectorAll('script[data-fortune]');
+                    scriptTags.forEach(script => script.remove());
+                    
+                    console.group('运势API响应详情');
+                    console.log('原始响应数据:', response);
+                    
+                    if (response && response.error_code === 0) {
+                        console.log('响应状态: 成功');
+                        console.log('运势数据:', {
+                            综合运势: response.all,
+                            健康运势: response.health,
+                            爱情运势: response.love,
+                            事业运势: response.work,
+                            财运运势: response.money,
+                            今日概述: response.summary,
+                            幸运颜色: response.color,
+                            幸运数字: response.number,
+                            速配星座: response.QFriend,
+                            今日提醒: response.datetime
+                        });
+
+                        const data = {
+                            name: sign,
+                            datetime: new Date().toLocaleDateString('zh-CN'),
+                            all: response.all || defaultFortuneData.all,
+                            health: response.health || defaultFortuneData.health,
+                            love: response.love || defaultFortuneData.love,
+                            work: response.work || defaultFortuneData.work,
+                            money: response.money || defaultFortuneData.money,
+                            summary: response.summary || defaultFortuneData.summary,
+                            color: response.color || defaultFortuneData.color,
+                            number: response.number || defaultFortuneData.number,
+                            QFriend: response.QFriend || defaultFortuneData.QFriend
+                        };
+
+                        console.log('处理后数据:', data);
+                        console.groupEnd();
                         renderFortune(data);
                     } else {
-                        console.log('API返回错误，使用默认数据');
+                        console.warn('响应状态: 失败');
+                        console.warn('错误信息:', {
+                            错误码: response?.error_code,
+                            错误描述: response?.reason || '未知错误'
+                        });
+                        console.groupEnd();
+                        console.log('使用默认数据');
                         renderFortune(defaultFortuneData);
                     }
-                } catch (error) {
-                    console.error('处理数据失败:', error);
-                    renderFortune(defaultFortuneData);
-                }
-            };
+                };
 
-            // 创建 script 标签进行 JSONP 请求
-            const script = document.createElement('script');
-            script.src = `http://web.juhe.cn:8080/constellation/getAll?consName=${encodeURIComponent(sign)}&type=today&key=${key}&callback=handleFortuneResponse`;
-            script.onerror = () => {
-                clearTimeout(timeout);
-                console.log('API请求失败，使用默认数据');
+                // 修改 script 标签的错误处理
+                script.onerror = (error) => {
+                    console.group('运势API请求错误');
+                    console.error('请求失败:', error);
+                    console.log('使用默认数据');
+                    console.groupEnd();
+                    renderFortune(defaultFortuneData);
+                    window.isLoadingFortune = false;
+                };
+
+                // 修改超时处理
+                const timeout = setTimeout(() => {
+                    console.group('运势API请求超时');
+                    console.warn('请求超时: 5000ms');
+                    console.log('使用默认数据');
+                    console.groupEnd();
+                    renderFortune(defaultFortuneData);
+                    window.isLoadingFortune = false;
+                }, 5000);
+
+                script.onload = () => {
+                    console.log('运势API请求成功');
+                    clearTimeout(timeout);
+                    window.isLoadingFortune = false;
+                };
+
+                document.body.appendChild(script);
+            } catch (error) {
+                console.error('运势请求异常:', error);
+                console.log('使用默认数据');
                 renderFortune(defaultFortuneData);
-            };
-            document.body.appendChild(script);
+                window.isLoadingFortune = false;
+            }
         }
 
         // 页面加载完成后获取运势
-        document.addEventListener('DOMContentLoaded', getFortune);
+        document.addEventListener('DOMContentLoaded', () => {
+            // 检查是否已经加载过运势数据
+            if (!window.fortuneLoaded) {
+                window.fortuneLoaded = true;
+                getFortune();
+                
+                // 添加日志以跟踪加载次数
+                console.log('运势加载时间:', new Date().toLocaleString());
+            }
+        });
     </script>
 </body>
 </html> 

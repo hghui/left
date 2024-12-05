@@ -4,1399 +4,310 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Left</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="common.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.js"></script>
-    <style>
-        /* 基础样式：设置动态渐变背景 */
-        body {
-            background: linear-gradient(-45deg, #ffcce6, #b3e0ff, #ffcce6, #99d6ff);
-            background-size: 400% 400%;
-            animation: gradientBG 20s ease infinite;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* 背景渐变动画 */
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* 主容器样式 */
-        .container {
-            text-align: center;
-            z-index: 2;
-            animation: fadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent;
-            padding: 2rem;
-            position: relative;
-            isolation: isolate;
-        }
-
-        /* 标题样式：渐变文字效果 */
-        h1 {
-            font-size: 9em;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, #ff66b3, #4d94ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: titleGradient 8s ease infinite;
-            font-family: 'Caveat', cursive;
-            transform: rotate(-5deg);
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.08);
-            letter-spacing: 0.1em;
-            filter: drop-shadow(0 10px 25px rgba(255, 102, 179, 0.2));
-        }
-
-        /* 搜索框样式：毛玻璃效果 */
-        #search-input {
-            padding: 15px 25px;
-            width: min(80vw, 500px);
-            border: none;
-            border-radius: 24px;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
-            font-family: 'Ma Shan Zheng', cursive;
-            font-size: 1.2em;
-            transform: rotate(-1deg);
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-            color: #666;
-            backdrop-filter: blur(5px);
-        }
-
-        /* 搜索框焦点状态 */
-        #search-input:focus {
-            box-shadow: 0 6px 25px rgba(255, 182, 193, 0.3);
-            transform: translateY(-2px);
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-        }
-
-        /* 搜索框占位符文本样式 */
-        #search-input::placeholder {
-            color: rgba(102, 102, 102, 0.6);
-            transition: color 0.3s ease;
-        }
-
-        /* 搜索框布局容器 */
-        .search-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        /* 搜索按钮样式：移动端显示 */
-        .search-button {
-            display: none;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 24px;
-            background: linear-gradient(120deg, #ff99cc, #99ccff);
-            color: white;
-            font-family: 'Ma Shan Zheng', cursive;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(255, 153, 204, 0.3);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        /* 雪花动画效果 */
-        .snowflake {
-            position: fixed;
-            color: #fff;
-            font-size: 1.5em;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
-                        0 0 15px rgba(255, 255, 255, 0.6),
-                        0 0 25px rgba(255, 255, 255, 0.4);
-            pointer-events: none;
-            user-select: none;
-            z-index: 1;
-            animation: fall linear forwards, glow 2s ease-in-out infinite alternate;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-        }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .search-button {
-                display: inline-block;
-            }
-            
-            #search-input {
-                width: 65vw;
-                padding: 12px 20px;
-            }
-            
-            .search-box {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-        }
-
-        /* 游戏容器样式 */
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(255, 77, 77, 0.1);
-        }
-
-        .image-container {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .game-image {
-            width: 400px;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .game-image:hover {
-            transform: scale(1.02);
-        }
-
-        .game-info {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 820px;
-            padding: 10px 20px;
-            background: rgba(255, 102, 179, 0.1);
-            border-radius: 15px;
-        }
-
-        .timer {
-            font-size: 1.2em;
-            color: #ff4d4d;
-            font-weight: bold;
-        }
-
-        .difference-marker {
-            position: absolute;
-            border: 2px solid #ff4d4d;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-            pointer-events: none;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .hint-button {
-            padding: 8px 16px;
-            background: linear-gradient(120deg, #ff99cc, #99ccff);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .hint-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 153, 204, 0.3);
-        }
-
-        .score {
-            font-size: 1.2em;
-            color: #4d94ff;
-        }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .game-container {
-                padding: 10px;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .image-container {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .game-image {
-                width: 100%;
-                height: auto;
-                max-height: 40vh;
-            }
-
-            .game-info {
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
-                padding: 10px;
-            }
-
-            .hint-button {
-                width: 100%;
-                padding: 12px;
-                font-size: 1.1em;
-            }
-
-            .difference-marker {
-                transform: scale(0.8);
-            }
-        }
-
-        /* 游控制按钮 */
-        .game-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: center;
-        }
-
-        .control-button {
-            padding: 8px 16px;
-            background: linear-gradient(120deg, #ff99cc, #99ccff);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .control-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 153, 204, 0.3);
-        }
-
-        /* 游戏标题样式 */
-        .game-title {
-            font-size: 1.5em;
-            color: #ff4d4d;
-            margin-bottom: 15px;
-            font-family: 'Ma Shan Zheng', cursive;
-            text-shadow: 0 2px 4px rgba(255, 77, 77, 0.2);
-        }
-
-        /* 计时器样式 */
-        .timer-container {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-            backdrop-filter: blur(8px);
-            padding: 15px 30px;
-            border-radius: 25px;
-            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-family: 'Caveat', cursive;
-            color: #666;
-            transform: rotate(-1deg);
-            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 100;
-        }
-
-        .timer-label {
-            font-size: 1.2em;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-            font-family: 'Ma Shan Zheng', cursive;
-            color: rgba(102, 102, 102, 0.8);
-        }
-
-        #love-timer {
-            font-size: 1.8em;
-            background: linear-gradient(45deg, #ff66b3, #4d94ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 500;
-            letter-spacing: 2px;
-            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
-            text-shadow: none;
-        }
-
-        /* 时间显示容器 */
-        .time-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-            backdrop-filter: blur(8px);
-            padding: 15px 30px;
-            border-radius: 25px;
-            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-family: 'Caveat', cursive;
-            color: #666;
-            text-align: center;
-            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 100;
-            transform: rotate(-1deg);
-        }
-
-        .current-time {
-            font-size: 1.5em;
-            margin-bottom: 5px;
-            background: linear-gradient(45deg, #ff66b3, #4d94ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 500;
-            letter-spacing: 2px;
-            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
-            text-shadow: none;
-        }
-
-        .lunar-info {
-            font-size: 1em;
-            font-family: 'Ma Shan Zheng', cursive;
-            color: rgba(102, 102, 102, 0.8);
-            margin-top: 8px;
-            letter-spacing: 1px;
-        }
-
-        .time-container:hover {
-            transform: translateY(-2px) rotate(-1deg);
-            box-shadow: 0 6px 25px rgba(255, 182, 193, 0.3);
-        }
-
-        /* 统一时间和计时器的动画效果 */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px) rotate(-1deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) rotate(-1deg);
-            }
-        }
-
-        /* 发光雪花 */
-        .snowflake {
-            position: fixed;
-            pointer-events: none;
-            z-index: 1;
-            animation: snowfall linear infinite, glow 2s ease-in-out infinite alternate;
-            text-shadow: 0 0 5px #fff,
-                        0 0 10px #fff,
-                        0 0 15px #ff99cc,
-                        0 0 20px #ff99cc,
-                        0 0 25px #ff99cc;
-            opacity: 0;
-        }
-
-        @keyframes snowfall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0.2;
-            }
-        }
-
-        @keyframes glow {
-            from { filter: brightness(1); }
-            to { filter: brightness(1.5); }
-        }
-
-        /* 鼠标拖尾效果 */
-        .mouse-trail {
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            width: 5px;
-            height: 5px;
-            background: linear-gradient(45deg, #ff99cc, #99ccff);
-            border-radius: 50%;
-            filter: blur(2px);
-            animation: trail-fade 1s ease-out forwards;
-        }
-
-        @keyframes trail-fade {
-            from {
-                opacity: 0.8;
-                transform: scale(1);
-            }
-            to {
-                opacity: 0;
-                transform: scale(2);
-            }
-        }
-
-        /* 更新弹窗相关样式，保持项目风格一致 */
-        .greeting-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(-45deg, rgba(255, 204, 230, 0.3), rgba(179, 224, 255, 0.3));
-            backdrop-filter: blur(8px);
-            z-index: 9998;
-            opacity: 0;
-            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .greeting-container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            z-index: 9999;
-            opacity: 0;
-            animation: greetingPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            width: min(90vw, 500px);
-            margin: 0 auto;
-        }
-
-        .greeting-content {
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-            backdrop-filter: blur(10px);
-            padding: 25px;
-            border-radius: 24px;
-            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-family: 'Ma Shan Zheng', cursive;
-            transform: rotate(-1deg);
-        }
-
-        .greeting-header {
-            text-align: center;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .greeting-header h3 {
-            font-size: 1.8em;
-            background: linear-gradient(45deg, #ff66b3, #4d94ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 0;
-            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
-            letter-spacing: 2px;
-        }
-
-        .greeting-time {
-            font-size: 1.5em;
-            margin: 15px 0;
-            background: linear-gradient(45deg, #ff66b3, #4d94ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-align: center;
-            font-weight: 500;
-            letter-spacing: 2px;
-            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
-        }
-
-        .greeting-content p {
-            margin: 15px 0;
-            font-size: 1.2em;
-            line-height: 1.6;
-            color: #666;
-            text-align: center;
-        }
-
-        .greeting-tip {
-            color: #4d94ff !important;
-            font-size: 1.1em !important;
-            margin-top: 15px !important;
-            filter: drop-shadow(0 2px 4px rgba(77, 148, 255, 0.2));
-        }
-
-        .greeting-close {
-            position: absolute;
-            top: -12px;
-            right: -12px;
-            width: 32px;
-            height: 32px;
-            border: none;
-            border-radius: 50%;
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-            color: #ff66b3;
-            font-size: 22px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(255, 153, 204, 0.2);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .greeting-close:hover {
-            transform: rotate(90deg) scale(1.1);
-            color: #4d94ff;
-            box-shadow: 0 6px 16px rgba(255, 153, 204, 0.3);
-        }
-
-        .greeting-close::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            bottom: -2px;
-            left: -2px;
-            background: linear-gradient(45deg, #ff66b3, #4d94ff);
-            border-radius: 50%;
-            z-index: -1;
-            opacity: 0.5;
-            transition: opacity 0.3s ease;
-        }
-
-        .greeting-close:hover::before {
-            opacity: 0.8;
-        }
-
-        @keyframes greetingPopIn {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8) rotate(-3deg);
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.05) rotate(2deg);
-            }
-            100% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1) rotate(-1deg);
-            }
-        }
-
-        .greeting-fade-out {
-            animation: greetingFadeOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        @keyframes greetingFadeOut {
-            0% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1) rotate(-1deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8) rotate(3deg);
-            }
-        }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .greeting-content {
-                padding: 20px;
-            }
-
-            .greeting-header h3 {
-                font-size: 1.5em;
-            }
-
-            .greeting-time {
-                font-size: 1.2em;
-            }
-
-            .greeting-content p {
-                font-size: 1.1em;
-            }
-        }
-
-        .feature-cards-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .feature-cards-container.show {
-            opacity: 1;
-        }
-
-        .feature-cards-container.fade-out {
-            opacity: 0;
-        }
-
-        .feature-cards-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(-45deg, rgba(255, 204, 230, 0.3), rgba(179, 224, 255, 0.3));
-            backdrop-filter: blur(8px);
-        }
-
-        .feature-cards-wrapper {
-            position: relative;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            padding: 20px;
-            transform: translateY(20px);
-            animation: cards-slide-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .feature-card {
-            width: 200px;
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: rotate(-1deg);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px) rotate(1deg);
-            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3);
-        }
-
-        .feature-card h3 {
-            font-size: 1.5em;
-            background: linear-gradient(45deg, #ff66b3, #4d94ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 0 0 10px 0;
-            font-family: 'Ma Shan Zheng', cursive;
-            text-align: center;
-            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
-        }
-
-        .feature-card p {
-            color: #666;
-            font-size: 1.1em;
-            line-height: 1.4;
-            margin: 0;
-            text-align: center;
-            font-family: 'Ma Shan Zheng', cursive;
-        }
-
-        @keyframes cards-slide-up {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .feature-cards-wrapper {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .feature-card {
-                width: 85vw;
-                max-width: 300px;
-                padding: 20px;
-            }
-        }
-    </style>
-    <meta name="description" content="一个温馨的育儿知识分享平台，提供专业的育儿建议和知识">
-    <meta name="keywords" content="儿,育儿知识,儿建议,婴儿护理,儿童保健">
-    <link rel="canonical" href="https://your-domain.com/index.html">
 </head>
 <body>
-    <div class="snow"></div>
-    <div class="container">
-        <h1>Left</h1>
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="输入关键词...">
-            <button class="search-button" onclick="search()">搜索</button>
-        </div>
+    <!-- 动态背景 -->
+    <div class="background-shapes">
+        <div class="heart-pink"></div>
+        <div class="heart-blue"></div>
     </div>
-    <div class="time-container">
-        <div id="current-time" class="current-time"></div>
-        <div id="lunar-info" class="lunar-info"></div>
+
+    <div class="main-container">
+        <!-- 计时器板块 -->
+        <section class="timer-section">
+            <div class="time-display">
+                <div id="current-time" class="current-time"></div>
+                <div id="lunar-info" class="lunar-info"></div>
+            </div>
+            
+            <div class="love-timer">
+                <div class="timer-label">在一起已经</div>
+                <div id="love-timer"></div>
+            </div>
+        </section>
+
+        <!-- 功能板块 -->
+        <section class="features-section">
+            <div class="feature-card" data-feature="love">
+                <div class="icon">💌</div>
+                <h3>情话时光</h3>
+                <p>温馨浪漫的情话分享</p>
+            </div>
+            
+            <div class="feature-card" data-feature="parenting">
+                <div class="icon">👶</div>
+                <h3>育儿知识</h3>
+                <p>专业的育儿建议</p>
+            </div>
+            
+            <div class="feature-card" data-feature="fun">
+                <div class="icon">🎮</div>
+                <h3>趣味空间</h3>
+                <p>有趣的互动内容</p>
+            </div>
+            
+            <div class="feature-card" data-feature="fortune">
+                <div class="icon">🌟</div>
+                <h3>今日运势</h3>
+                <p>星座运势查询</p>
+            </div>
+            
+            <div class="feature-card" data-feature="about">
+                <div class="icon">ℹ️</div>
+                <h3>关于项目</h3>
+                <p>项目介绍与说明</p>
+            </div>
+        </section>
     </div>
-    <div class="timer-container">
-        <div class="timer-label">在一起已经</div>
-        <div id="love-timer"></div>
-    </div>
+
     <script>
-        // 定义API接口配置
-        const API_CONFIG = {
-            riddles: 'https://api.example.com/riddles', // 灯谜API
-            proverbs: 'https://api.example.com/proverbs', // 谚语API
-            trivia: 'https://api.example.com/trivia'  // 冷知识API
-        };
-
-        // 本地缓存配置
-        const CACHE_CONFIG = {
-            maxAge: 1000 * 60 * 60, // 1小时存
-            key: 'jokes_cache'
-        };
-
-        // 默认的本地数据
-        const DEFAULT_DATA = {
-            riddles: [
-                "灯谜：'四季平安（打个字）'\n「春：有四个季，上下都是平安」🏮",
-                "灯谜：'小姐上轿（打一个字）'\n「娶：上面是女，下面是取」💝",
-                // ... 其他灯谜数据
-            ],
-            proverbs: [
-                "农谚：'冬天不下雪，春天遭罪热'\n「说明雪对农作物的重要性」🌾",
-                "民谚：'冬练三九，夏练三伏'\n「说明锻炼要持之以恒」💪",
-                // ... 其他谚语数据
-            ],
-            trivia: [
-                "冷知'古代建筑为什么要用斗拱？'\n「可以分散房屋重量，防止震」🏰",
-                "你知道吗：'古人如何在冬天存放冰块？'\n「在地下挖窖，称为冰窖，可以保存一年」❄️",
-                // ... 其他冷知识数据
-            ],
-            spotDiff: [
-                {
-                    title: "春日庭院",
-                    image1: "images/garden1.jpg",
-                    image2: "images/garden2.jpg",
-                    differences: [
-                        { x: 120, y: 150, radius: 20, hint: "朵颜色不同" },
-                        { x: 300, y: 200, radius: 25, hint: "蝴蝶位置变化" },
-                        { x: 450, y: 280, radius: 15, hint: "树叶缺失" }
-                    ],
-                    timeLimit: 60,
-                    difficulty: "简单"
-                },
-                {
-                    title: "冬日雪景",
-                    image1: "images/snow1.jpg",
-                    image2: "images/snow2.jpg",
-                    differences: [
-                        { x: 200, y: 180, radius: 20, hint: "雪人装饰不同" },
-                        { x: 350, y: 220, radius: 20, hint: "窗户形状变化" },
-                        { x: 500, y: 300, radius: 25, hint: "积雪厚度不同" }
-                    ],
-                    timeLimit: 45,
-                    difficulty: "中等"
-                }
-            ]
-        };
-
-        // 数据获取和缓存管理
-        class ContentManager {
-            constructor() {
-                this.cache = this.loadCache();
-                this.isLoading = false;
-                this.offlineMode = !navigator.onLine;
-                this.setupNetworkListeners();
-            }
-
-            setupNetworkListeners() {
-                window.addEventListener('online', () => {
-                    this.offlineMode = false;
-                    this.showToast('网络已连接，正在更新数据...');
-                    this.refreshContent();
-                });
-
-                window.addEventListener('offline', () => {
-                    this.offlineMode = true;
-                    this.showToast('已切换到离线模式');
-                });
-            }
-
-            showToast(message) {
-                // 创建或更新 toast 提示
-                let toast = document.getElementById('toast');
-                if (!toast) {
-                    toast = document.createElement('div');
-                    toast.id = 'toast';
-                    document.body.appendChild(toast);
-                }
-                toast.textContent = message;
-                toast.className = 'toast show';
-                setTimeout(() => toast.className = 'toast', 3000);
-            }
-
-            loadCache() {
-                const cached = localStorage.getItem(CACHE_CONFIG.key);
-                return cached ? JSON.parse(cached) : {
-                    timestamp: 0,
-                    data: DEFAULT_DATA
-                };
-            }
-
-            saveCache(data) {
-                const cache = {
-                    timestamp: Date.now(),
-                    data: data
-                };
-                localStorage.setItem(CACHE_CONFIG.key, JSON.stringify(cache));
-            }
-
-            async fetchContent(type) {
-                if (this.offlineMode) {
-                    return this.cache.data[type];
-                }
-
-                try {
-                    const response = await fetch(API_CONFIG[type]);
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    const data = await response.json();
-                    return data;
-                } catch (error) {
-                    console.error(`Error fetching ${type}:`, error);
-                    this.showToast('网络请求失败，使用本地数据');
-                    return this.cache.data[type];
-                }
-            }
-
-            async refreshContent() {
-                if (this.isLoading) return this.cache.data;
-                
-                const now = Date.now();
-                if (now - this.cache.timestamp < CACHE_CONFIG.maxAge) {
-                    return this.cache.data;
-                }
-
-                this.isLoading = true;
-                this.showLoadingState(true);
-
-                try {
-                    const [riddles, proverbs, trivia] = await Promise.all([
-                        this.fetchContent('riddles'),
-                        this.fetchContent('proverbs'),
-                        this.fetchContent('trivia')
-                    ]);
-
-                    const newData = {
-                        riddles: riddles || this.cache.data.riddles,
-                        proverbs: proverbs || this.cache.data.proverbs,
-                        trivia: trivia || this.cache.data.trivia
-                    };
-
-                    this.saveCache(newData);
-                    return newData;
-                } catch (error) {
-                    console.error('Error refreshing content:', error);
-                    return this.cache.data;
-                } finally {
-                    this.isLoading = false;
-                    this.showLoadingState(false);
-                }
-            }
-
-            showLoadingState(isLoading) {
-                const searchButton = document.querySelector('.search-button');
-                if (searchButton) {
-                    if (isLoading) {
-                        searchButton.disabled = true;
-                        searchButton.innerHTML = '<span class="loading-spinner"></span>';
-                    } else {
-                        searchButton.disabled = false;
-                        searchButton.textContent = '搜索';
-                    }
-                }
-            }
-        }
-
-        // 初始化内容管理器
-        const contentManager = new ContentManager();
-
-        // 改索函数，加入时内容
-        async function search() {
-            const searchTerm = document.getElementById('search-input').value;
-            if (searchTerm.trim() !== '') {
-                // 定义触发关键词数组
-                const loveKeywords = ['情', '爱', '辉', '0819', '0519', '0324'];
-                const jokeKeyword = '好玩';
-                const parentingKeyword = '无忧';
-                const aboutKeyword = '这是啥';
-                
-                // 检查是否包含触发关键词
-                const shouldShowLove = loveKeywords.some(keyword => 
-                    searchTerm.toLowerCase().includes(keyword.toLowerCase())
-                );
-                
-                // 精确匹配关键词
-                const shouldShowJoke = searchTerm.includes(jokeKeyword);
-                const shouldShowParenting = searchTerm.includes(parentingKeyword);
-                const shouldShowAbout = searchTerm.includes(aboutKeyword);
-                
-                if (shouldShowLove) {
-                    window.location.href = 'love.html';
-                } else if (shouldShowJoke) {
-                    window.location.href = 'joke.html';
-                } else if (shouldShowParenting) {
-                    window.location.href = 'parenting.html';
-                } else if (shouldShowAbout) {
-                    window.location.href = 'about.html';
-                } else {
-                    try {
-                        // 先尝试使用夸克搜索
-                        const quarkResponse = await fetch(`https://quark.sm.cn/s?q=${encodeURIComponent(searchTerm)}`);
-                        if (quarkResponse.ok) {
-                            window.location.href = `https://quark.sm.cn/s?q=${encodeURIComponent(searchTerm)}`;
-                        } else {
-                            // 如果夸克失效，使用百度
-                            window.location.href = `https://www.baidu.com/s?wd=${encodeURIComponent(searchTerm)}`;
-                        }
-                    } catch (error) {
-                        // 发生错误时使用百度
-                        window.location.href = `https://www.baidu.com/s?wd=${encodeURIComponent(searchTerm)}`;
-                    }
-                }
-            }
-        }
-
-        // 定期刷新内容
-        setInterval(async () => {
-            await contentManager.refreshContent();
-        }, CACHE_CONFIG.maxAge);
-
-        // 页面加载时新一次内容
-        window.addEventListener('load', async () => {
-            await contentManager.refreshContent();
-        });
-
-        // 添加样式
-        const style = document.createElement('style');
-        style.textContent = `
-            .toast {
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%) translateY(100px);
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                padding: 12px 24px;
-                border-radius: 24px;
-                transition: transform 0.3s ease;
-                z-index: 1000;
-            }
-
-            .toast.show {
-                transform: translateX(-50%) translateY(0);
-            }
-
-            .loading-spinner {
-                display: inline-block;
-                width: 20px;
-                height: 20px;
-                border: 2px solid rgba(255,255,255,0.3);
-                border-radius: 50%;
-                border-top-color: white;
-                animation: spin 1s ease-in-out infinite;
-            }
-
-            @keyframes spin {
-                to { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // 添加回车搜索
-        document.getElementById('search-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                search();
-            }
-        });
-
-        // 优化搜框焦点效果
-        document.getElementById('search-input').addEventListener('focus', function() {
-            this.placeholder = '输入关键词，按回车索...';
-        });
-
-        document.getElementById('search-input').addEventListener('blur', function() {
-            this.placeholder = '输入关键词...';
-        });
-
-        // 计时器功能
-        function updateTimer() {
-            const startDate = new Date('2022-08-19T00:00:00');
-            const now = new Date();
-            const diff = now - startDate;
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            const milliseconds = diff % 1000;
-            
-            const timerElement = document.getElementById('love-timer');
-            if (timerElement) {
-                timerElement.textContent = `${days}天 ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(milliseconds).padStart(3, '0')}`;
-            }
-        }
-        
-        updateTimer();
-        const timerInterval = setInterval(updateTimer, 10);
-
-        // 更新时间显示
-        function updateDateTime() {
-            const now = new Date();
-            const timeElement = document.getElementById('current-time');
-            const lunarElement = document.getElementById('lunar-info');
-            
-            if (!timeElement || !lunarElement) return;
-            
-            // 格式化时
-            const timeStr = now.toLocaleString('zh-CN', {
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            
-            // 获取农历信息
-            const lunar = Lunar.fromDate(now);
-            const jieQi = lunar.getJieQi();
-            const yinYang = lunar.getYearNaYin();
-            const dayYi = lunar.getDayYi();
-            const dayJi = lunar.getDayJi();
-            
-            timeElement.textContent = timeStr;
-            lunarElement.innerHTML = `
-                ${lunar.getYearInGanZhi()}年 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()} 
-                ${jieQi ? jieQi : ''} ${yinYang}<br>
-                <span style="color: #4CAF50">宜：${dayYi.length > 0 ? dayYi[0] : '无'}</span> 
-                <span style="color: #F44336">忌：${dayJi.length > 0 ? dayJi[0] : '无'}</span>
-            `;
-        }
-        
-        updateDateTime();
-        const dateTimeInterval = setInterval(updateDateTime, 1000);
-
-        // 将原来的代码：
-        window.addEventListener('unload', () => {
-            clearInterval(timerInterval);
-            clearInterval(dateTimeInterval);
-        });
-
-        // 修改为：
-        let cleanupFunction = () => {
-            clearInterval(timerInterval);
-            clearInterval(dateTimeInterval);
-        };
-
-        window.addEventListener('beforeunload', cleanupFunction);
-        window.addEventListener('pagehide', cleanupFunction);
-
-        // 如果需要手动清理
-        function cleanup() {
-            cleanupFunction();
-            window.removeEventListener('beforeunload', cleanupFunction);
-            window.removeEventListener('pagehide', cleanupFunction);
-        }
-
-        // 确保DOM加载完成后再初始化
         document.addEventListener('DOMContentLoaded', () => {
-            // 检查并创建时间容器
-            if (!document.querySelector('.time-container')) {
-                const timeContainer = document.createElement('div');
-                timeContainer.className = 'time-container';
-                timeContainer.innerHTML = `
-                    <div id="current-time" class="current-time"></div>
-                    <div id="lunar-info" class="lunar-info"></div>
-                `;
-                document.body.appendChild(timeContainer);
-            }
+            // 初始化功能卡片
+            function initFeatureCards() {
+                const featureCards = document.querySelectorAll('.feature-card');
+                if (!featureCards || featureCards.length === 0) return;
 
-            // 检查并创建计时器容器
-            if (!document.querySelector('.timer-container')) {
-                const timerContainer = document.createElement('div');
-                timerContainer.className = 'timer-container';
-                timerContainer.innerHTML = `
-                    <div class="timer-label">在一起已经</div>
-                    <div id="love-timer"></div>
-                `;
-                document.body.appendChild(timerContainer);
-            }
-
-            updateTimer();
-            updateDateTime();
-        });
-
-        // 在 script 部分添加雪花生成逻辑
-        function createSnowflakes() {
-            const snowflakes = ['❄', '❅', '❆', '✧', '✦'];
-            const container = document.body;
-            
-            setInterval(() => {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                snowflake.style.left = Math.random() * 100 + 'vw';
-                snowflake.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                snowflake.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
-                
-                container.appendChild(snowflake);
-                
-                setTimeout(() => snowflake.remove(), 5000);
-            }, 200);
-        }
-        
-        createSnowflakes();
-
-        // 在 script 部分添加鼠标拖尾逻辑
-        function createTrail(e) {
-            const trail = document.createElement('div');
-            trail.className = 'mouse-trail';
-            trail.style.left = e.clientX + 'px';
-            trail.style.top = e.clientY + 'px';
-            document.body.appendChild(trail);
-            
-            setTimeout(() => trail.remove(), 1000);
-        }
-        
-        document.addEventListener('mousemove', throttle(createTrail, 20));
-        
-        function throttle(func, limit) {
-            let inThrottle;
-            return function(e) {
-                if (!inThrottle) {
-                    func(e);
-                    inThrottle = true;
-                    setTimeout(() => inThrottle = false, limit);
-                }
-            }
-        }
-
-        // 改 showWelcomeMessage 函数
-        async function showWelcomeMessage() {
-            try {
-                // 使用提供的 API 获取数据
-                const response = await fetch('https://api.kuleu.com/api/getGreetingMessage?type=json');
-                const data = await response.json();
-                
-                // 创建遮罩
-                const overlay = document.createElement('div');
-                overlay.className = 'greeting-overlay';
-                document.body.appendChild(overlay);
-
-                // 创建弹窗
-                const popup = document.createElement('div');
-                popup.className = 'greeting-container';
-
-                if (data.code === 200) {
-                    popup.innerHTML = `
-                        <div class="greeting-content">
-                            <div class="greeting-header">
-                                <h3>温馨提示</h3>
-                                <button class="greeting-close">×</button>
-                            </div>
-                            <div class="greeting-time">${data.data.currentTime}</div>
-                            <p>${data.data.greeting}</p>
-                            ${data.data.tip ? `<p class="greeting-tip">${data.data.tip}</p>` : ''}
-                        </div>
-                    `;
-                } else {
-                    const now = new Date();
-                    const timeString = now.toLocaleTimeString('zh-CN', {
-                        hour12: false,
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit'
-                    });
-                    // ... 其他代保持不变 ...
-                    popup.innerHTML = `
-                        <div class="greeting-content">
-                            <div class="greeting-header">
-                                <h3>温馨提示</h3>
-                                <button class="greeting-close">×</button>
-                            </div>
-                            <div class="greeting-time">${timeString}</div>
-                            <p>${greeting}</p>
-                            <p class="greeting-tip">祝您使用愉快！</p>
-                        </div>
-                    `;
-                }
-                
-                document.body.appendChild(popup);
-
-                // 淡入遮罩
-                requestAnimationFrame(() => {
-                    overlay.style.opacity = '1';
-                });
-
-                // 添加关闭事件
-                const closeButton = popup.querySelector('.greeting-close');
-                const close = () => {
-                    popup.classList.add('greeting-fade-out');
-                    overlay.style.opacity = '0';
-                    setTimeout(() => {
-                        popup.remove();
-                        overlay.remove();
-                    }, 300);
-                };
-
-                // 添加触摸事件支持
-                closeButton.addEventListener('click', close);
-                closeButton.addEventListener('touchend', (e) => {
-                    e.preventDefault(); // 防止触摸穿透
-                    close();
-                });
-
-                // 优化遮罩层点击/触摸
-                overlay.addEventListener('click', close);
-                overlay.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    if (e.target === overlay) {
-                        close();
-                    }
-                });
-
-                // 添加键盘支持
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && document.body.contains(popup)) {
-                        close();
-                    }
-                });
-
-                // 防止弹窗内容滚动穿透
-                const preventScroll = (e) => {
-                    if (!popup.contains(e.target)) {
+                featureCards.forEach((card, index) => {
+                    if (!card) return;
+                    
+                    card.style.setProperty('--i', index);
+                    card.addEventListener('click', (e) => {
                         e.preventDefault();
-                    }
-                };
-                
-                document.body.style.overflow = 'hidden';
-                document.addEventListener('touchmove', preventScroll, { passive: false });
+                        const feature = card.dataset.feature;
+                        if (!feature) return;
+                        
+                        // 添加点击反馈
+                        card.style.transform = 'scale(0.98)';
+                        setTimeout(() => {
+                            card.style.transform = '';
+                            
+                            switch(feature) {
+                                case 'love':
+                                    window.location.href = 'love.html';
+                                    break;
+                                case 'parenting':
+                                    window.location.href = 'parenting.html';
+                                    break;
+                                case 'fun':
+                                    window.location.href = 'joke.html';
+                                    break;
+                                case 'fortune':
+                                    showFortuneModal();
+                                    break;
+                                case 'about':
+                                    window.location.href = 'about.html';
+                                    break;
+                            }
+                        }, 150);
+                    });
+                });
+            }
 
-                // 清理函数
-                const cleanup = () => {
-                    document.body.style.overflow = '';
-                    document.removeEventListener('touchmove', preventScroll);
-                };
+            // 初始化计时器
+            function initializeTimers() {
+                function updateTime() {
+                    const timeElement = document.getElementById('current-time');
+                    const lunarElement = document.getElementById('lunar-info');
+                    
+                    if (!timeElement || !lunarElement) return;
+                    
+                    const now = new Date();
+                    timeElement.textContent = now.toLocaleTimeString('zh-CN');
+                    
+                    const lunar = Lunar.fromDate(now);
+                    lunarElement.innerHTML = `
+                        ${lunar.getYearInGanZhi()}年 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()} 
+                    `;
+                }
 
-                // 在关闭时理
-                const originalClose = close;
-                close = () => {
-                    cleanup();
-                    originalClose();
-                };
+                function updateLoveTimer() {
+                    const loveTimerElement = document.getElementById('love-timer');
+                    if (!loveTimerElement) return;
+                    
+                    const startDate = new Date('2022-08-19');
+                    const now = new Date();
+                    const diff = now - startDate;
+                    
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    loveTimerElement.textContent = `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
+                }
 
-                // 5秒后自动关闭
-                setTimeout(() => {
-                    if (document.body.contains(popup)) {
-                        close();
-                    }
-                }, 5000);
+                updateTime();
+                updateLoveTimer();
+                setInterval(updateTime, 1000);
+                setInterval(updateLoveTimer, 1000);
+            }
+
+            // 初始化所有功能
+            try {
+                initFeatureCards();
+                initializeTimers();
             } catch (error) {
-                console.error('获取问候信息失败:', error);
+                console.error('初始化失败:', error);
             }
-        }
 
-        // 确在 DOM 加载完成后立即显示弹窗
-        document.addEventListener('DOMContentLoaded', showWelcomeMessage);
+            // 显示欢迎信息
+            setTimeout(() => {
+                showDynamicIsland('欢迎回来！今天也要开心哦 💖');
+            }, 1000);
 
-        // 添加输入框点击计数和触发逻辑
-        let clickCount = 0;
-        let lastClickTime = 0;
+            // 显示灵动岛
+            setTimeout(() => {
+                initDynamicIsland();
+            }, 1000);
 
-        document.getElementById('search-input').addEventListener('click', (e) => {
-            const now = Date.now();
-            if (now - lastClickTime > 500) { // 重置计数器如果点击间隔超过500ms
-                clickCount = 0;
+            // 添加鼠标跟踪发光效果
+            const cards = document.querySelectorAll('.feature-card');
+            const container = document.querySelector('.features-section');
+
+            // 更新鼠标位置变量
+            function handleMouseMove(e) {
+                const cards = document.querySelectorAll('.feature-card');
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
             }
-            lastClickTime = now;
-            clickCount++;
 
-            if (clickCount === 3) {
-                clickCount = 0;
-                createFeatureCards();
+            // 处理卡片的发光效果传播
+            function handleCardHover(e) {
+                const hoveredCard = e.currentTarget;
+                const cards = document.querySelectorAll('.feature-card');
+                const index = Array.from(cards).indexOf(hoveredCard);
+                
+                cards.forEach((card, i) => {
+                    const distance = Math.abs(i - index);
+                    const delay = distance * 100;
+                    const opacity = Math.max(0, 1 - distance * 0.3);
+                    
+                    card.style.transition = `all 0.3s ease ${delay}ms`;
+                    if (distance <= 2) { // 只影响相邻的两张卡片
+                        card.style.setProperty('--glow-opacity', opacity.toString());
+                        card.classList.add('neighbor-glow');
+                    }
+                });
+            }
+
+            // 移除发光效果
+            function handleCardLeave() {
+                const cards = document.querySelectorAll('.feature-card');
+                cards.forEach(card => {
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.setProperty('--glow-opacity', '0');
+                    card.classList.remove('neighbor-glow');
+                });
+            }
+
+            // 添加事件监听器
+            if (container) {
+                container.addEventListener('mousemove', handleMouseMove);
+                cards.forEach(card => {
+                    card.addEventListener('mouseenter', handleCardHover);
+                    card.addEventListener('mouseleave', handleCardLeave);
+                });
             }
         });
 
-        // 在 script 标签内添加 createFeatureCards 函数
-        function createFeatureCards() {
-            const cardContainer = document.createElement('div');
-            cardContainer.className = 'feature-cards-container';
-            
-            cardContainer.innerHTML = `
-                <div class="feature-cards-overlay"></div>
-                <div class="feature-cards-wrapper">
-                    <div class="feature-card" data-href="love.html">
-                        <div class="card-content">
-                            <h3>惊喜</h3>
-                            <p>发现属于你的专属惊喜</p>
-                        </div>
-                    </div>
-                    <div class="feature-card" data-href="joke.html">
-                        <div class="card-content">
-                            <h3>趣味</h3>
-                            <p>轻松愉快的娱乐时光</p>
-                        </div>
-                    </div>
-                    <div class="feature-card" data-href="fortune.html">
-                        <div class="card-content">
-                            <h3>运势</h3>
-                            <p>查看今日运势和吉凶</p>
-                        </div>
-                    </div>
-                    <div class="feature-card" data-href="parenting.html">
-                        <div class="card-content">
-                            <h3>育儿</h3>
-                            <p>专业的育儿知识分享</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+        // 灵动岛数据获取和显示
+        async function showDynamicIsland() {
+            try {
+                // 获取API数据
+                const response = await fetch('https://api.kuleu.com/api/getGreetingMessage?type=json');
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    const data = result.data;
+                    
+                    // 移除已存在的灵动岛
+                    document.querySelectorAll('.dynamic-island, .dynamic-island-overlay').forEach(el => el.remove());
 
-            document.body.appendChild(cardContainer);
+                    // 创建新的灵动岛
+                    const island = document.createElement('div');
+                    island.className = 'dynamic-island';
+                    
+                    const overlay = document.createElement('div');
+                    overlay.className = 'dynamic-island-overlay';
+                    
+                    // 构建内容
+                    const content = `
+                        <div class="modal-content">
+                            <div class="greeting-content">
+                                <div class="greeting-time">${data.currentTime}</div>
+                                <div class="greeting-message">${data.greeting}</div>
+                                ${data.tip ? `<div class="greeting-tip">${data.tip}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    island.innerHTML = content;
+                    
+                    // 添加到页面
+                    document.body.appendChild(overlay);
+                    document.body.appendChild(island);
+                    
+                    // 显示动画
+                    requestAnimationFrame(() => {
+                        island.classList.add('show');
+                    });
 
-            // 添加卡片点击事件
-            const cards = cardContainer.querySelectorAll('.feature-card');
-            cards.forEach(card => {
-                card.addEventListener('click', () => {
-                    const href = card.dataset.href;
-                    if (href) {
-                        window.location.href = href;
-                    }
-                });
-            });
+                    // 点击遮罩层关闭灵动岛
+                    overlay.addEventListener('click', closeDynamicIsland);
+                    
+                    // 触摸事件支持
+                    overlay.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        closeDynamicIsland();
+                    });
 
-            // 添加遮罩点击关闭
-            const overlay = cardContainer.querySelector('.feature-cards-overlay');
-            overlay.addEventListener('click', () => {
-                cardContainer.classList.add('fade-out');
-                setTimeout(() => cardContainer.remove(), 300);
-            });
-
-            // 添加 ESC 键关闭
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && document.body.contains(cardContainer)) {
-                    cardContainer.classList.add('fade-out');
-                    setTimeout(() => cardContainer.remove(), 300);
+                    // 自动关闭
+                    setTimeout(() => {
+                        closeDynamicIsland();
+                    }, 5000); // 5秒后自动关闭
+                    
+                } else {
+                    console.error('API返回错误:', result.msg);
                 }
-            });
+            } catch (error) {
+                console.error('获取数据失败:', error);
+            }
+        }
 
-            // 动画显示
-            requestAnimationFrame(() => {
-                cardContainer.classList.add('show');
-            });
+        // 定时刷新灵动岛
+        function initDynamicIsland() {
+            // 首次显示
+            showDynamicIsland();
+
+            // 每隔一段时间刷新一次
+            setInterval(() => {
+                showDynamicIsland();
+            }, 30 * 60 * 1000); // 每30分钟刷新一次
+        }
+
+        // 关灵动岛
+        function closeDynamicIsland() {
+            const island = document.querySelector('.dynamic-island');
+            const overlay = document.querySelector('.dynamic-island-overlay');
+            
+            if (island && overlay) {
+                island.classList.add('fade-out');
+                setTimeout(() => {
+                    island.remove();
+                    overlay.remove();
+                }, 600);
+            }
         }
     </script>
 </body>
