@@ -617,6 +617,111 @@
                 font-size: 1.1em;
             }
         }
+
+        .feature-cards-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-cards-container.show {
+            opacity: 1;
+        }
+
+        .feature-cards-container.fade-out {
+            opacity: 0;
+        }
+
+        .feature-cards-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(-45deg, rgba(255, 204, 230, 0.3), rgba(179, 224, 255, 0.3));
+            backdrop-filter: blur(8px);
+        }
+
+        .feature-cards-wrapper {
+            position: relative;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            transform: translateY(20px);
+            animation: cards-slide-up 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .feature-card {
+            width: 200px;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(255, 182, 193, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: rotate(-1deg);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            background: linear-gradient(45deg, #ff66b3, #4d94ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0 0 10px 0;
+            font-family: 'Ma Shan Zheng', cursive;
+            text-align: center;
+            filter: drop-shadow(0 2px 4px rgba(255, 102, 179, 0.2));
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.4;
+            margin: 0;
+            text-align: center;
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+
+        @keyframes cards-slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .feature-cards-wrapper {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .feature-card {
+                width: 85vw;
+                max-width: 300px;
+                padding: 20px;
+            }
+        }
     </style>
     <meta name="description" content="一个温馨的育儿知识分享平台，提供专业的育儿建议和知识">
     <meta name="keywords" content="儿,育儿知识,儿建议,婴儿护理,儿童保健">
@@ -649,7 +754,7 @@
 
         // 本地缓存配置
         const CACHE_CONFIG = {
-            maxAge: 1000 * 60 * 60, // 1小时缓存
+            maxAge: 1000 * 60 * 60, // 1小时存
             key: 'jokes_cache'
         };
 
@@ -818,7 +923,7 @@
         // 初始化内容管理器
         const contentManager = new ContentManager();
 
-        // 修改索函数，加入��时内容
+        // 改索函数，加入时内容
         async function search() {
             const searchTerm = document.getElementById('search-input').value;
             if (searchTerm.trim() !== '') {
@@ -1114,7 +1219,7 @@
                         minute: '2-digit',
                         second: '2-digit'
                     });
-                    // ... 其他代码保持不变 ...
+                    // ... 其他代保持不变 ...
                     popup.innerHTML = `
                         <div class="greeting-content">
                             <div class="greeting-header">
@@ -1185,7 +1290,7 @@
                     document.removeEventListener('touchmove', preventScroll);
                 };
 
-                // 在关闭时清理
+                // 在关闭时理
                 const originalClose = close;
                 close = () => {
                     cleanup();
@@ -1205,6 +1310,87 @@
 
         // 确在 DOM 加载完成后立即显示弹窗
         document.addEventListener('DOMContentLoaded', showWelcomeMessage);
+
+        // 添加输入框点击计数和触发逻辑
+        let clickCount = 0;
+        let lastClickTime = 0;
+
+        document.getElementById('search-input').addEventListener('click', (e) => {
+            const now = Date.now();
+            if (now - lastClickTime > 500) { // 重置计数器如果点击间隔超过500ms
+                clickCount = 0;
+            }
+            lastClickTime = now;
+            clickCount++;
+
+            if (clickCount === 3) {
+                clickCount = 0;
+                createFeatureCards();
+            }
+        });
+
+        // 在 script 标签内添加 createFeatureCards 函数
+        function createFeatureCards() {
+            const cardContainer = document.createElement('div');
+            cardContainer.className = 'feature-cards-container';
+            
+            cardContainer.innerHTML = `
+                <div class="feature-cards-overlay"></div>
+                <div class="feature-cards-wrapper">
+                    <div class="feature-card" data-href="love.html">
+                        <div class="card-content">
+                            <h3>惊喜</h3>
+                            <p>发现属于你的专属惊喜</p>
+                        </div>
+                    </div>
+                    <div class="feature-card" data-href="joke.html">
+                        <div class="card-content">
+                            <h3>趣味</h3>
+                            <p>轻松愉快的娱乐时光</p>
+                        </div>
+                    </div>
+                    <div class="feature-card" data-href="parenting.html">
+                        <div class="card-content">
+                            <h3>育儿</h3>
+                            <p>专业的育儿知识分享</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(cardContainer);
+
+            // 添加卡片点击事件
+            const cards = cardContainer.querySelectorAll('.feature-card');
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const href = card.dataset.href;
+                    if (href) {
+                        window.location.href = href;
+                    }
+                });
+            });
+
+            // 添加遮罩点击关闭
+            const overlay = cardContainer.querySelector('.feature-cards-overlay');
+            overlay.addEventListener('click', () => {
+                cardContainer.classList.add('fade-out');
+                setTimeout(() => cardContainer.remove(), 300);
+            });
+
+            // 添加 ESC 键关闭
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.body.contains(cardContainer)) {
+                    cardContainer.classList.add('fade-out');
+                    setTimeout(() => cardContainer.remove(), 300);
+                }
+            });
+
+            // 动画显示
+            requestAnimationFrame(() => {
+                cardContainer.classList.add('show');
+            });
+        }
     </script>
 </body>
 </html> 
