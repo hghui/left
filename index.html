@@ -110,41 +110,80 @@
 
             // 初始化计时器
             function initializeTimers() {
+                // 获取元素
+                const timeElement = document.getElementById('current-time');
+                const lunarElement = document.getElementById('lunar-info');
+                const loveTimerElement = document.getElementById('love-timer');
+                
+                // 更新时间函数
                 function updateTime() {
-                    const timeElement = document.getElementById('current-time');
-                    const lunarElement = document.getElementById('lunar-info');
-                    
-                    if (!timeElement || !lunarElement) return;
-                    
-                    const now = new Date();
-                    timeElement.textContent = now.toLocaleTimeString('zh-CN');
-                    
-                    const lunar = Lunar.fromDate(now);
-                    lunarElement.innerHTML = `
-                        ${lunar.getYearInGanZhi()}年 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()} 
-                    `;
+                    if (timeElement && lunarElement) {
+                        const now = new Date();
+                        // 使用 try-catch 避免可能的错误
+                        try {
+                            timeElement.textContent = now.toLocaleTimeString('zh-CN');
+                            const lunar = Lunar.fromDate(now);
+                            lunarElement.innerHTML = `
+                                ${lunar.getYearInGanZhi()}年 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()} 
+                            `;
+                        } catch (error) {
+                            console.error('更新时间出错:', error);
+                        }
+                    }
                 }
 
+                // 更新恋爱计时器函数
                 function updateLoveTimer() {
-                    const loveTimerElement = document.getElementById('love-timer');
-                    if (!loveTimerElement) return;
-                    
-                    const startDate = new Date('2022-08-19');
-                    const now = new Date();
-                    const diff = now - startDate;
-                    
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                    
-                    loveTimerElement.textContent = `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
+                    if (loveTimerElement) {
+                        try {
+                            const startDate = new Date('2022-08-19');
+                            const now = new Date();
+                            const diff = now - startDate;
+                            
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                            
+                            loveTimerElement.textContent = `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
+                        } catch (error) {
+                            console.error('更新恋爱计时器出错:', error);
+                        }
+                    }
                 }
 
-                updateTime();
-                updateLoveTimer();
-                setInterval(updateTime, 1000);
-                setInterval(updateLoveTimer, 1000);
+                // 确保 DOM 加载完成后再初始化
+                function init() {
+                    // 立即更新一次
+                    updateTime();
+                    updateLoveTimer();
+
+                    // 设置定时器
+                    const timeInterval = setInterval(updateTime, 1000);
+                    const loveTimerInterval = setInterval(updateLoveTimer, 1000);
+
+                    // 在页面隐藏时清除定时器以节省资源
+                    document.addEventListener('visibilitychange', () => {
+                        if (document.hidden) {
+                            clearInterval(timeInterval);
+                            clearInterval(loveTimerInterval);
+                        } else {
+                            // 页面可见时重新开始
+                            updateTime();
+                            updateLoveTimer();
+                            setInterval(updateTime, 1000);
+                            setInterval(updateLoveTimer, 1000);
+                        }
+                    });
+                }
+
+                // 如果 DOM 已经加载完成，直接初始化
+                if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                    init();
+                } else {
+                    // 否则等待 DOM 加载完成
+                    document.addEventListener('DOMContentLoaded', init);
+                }
             }
 
             // 初始化所有功能
@@ -182,7 +221,7 @@
                 });
             }
 
-            // 处理卡片的发光效果传播
+            // 处理卡���的发光效果传播
             function handleCardHover(e) {
                 const hoveredCard = e.currentTarget;
                 const cards = document.querySelectorAll('.feature-card');
@@ -382,7 +421,7 @@
             }
         }
 
-        // 修改运势灵动岛函数
+        // 修改运势灵���岛函数
         async function showFortuneIsland() {
             try {
                 // 使用 JSONP 处理跨域
@@ -533,7 +572,7 @@
             }
         });
 
-        // 添加触摸事���支持
+        // 添加触摸事支持
         document.body.addEventListener('touchend', (e) => {
             const island = document.querySelector('.dynamic-island');
             const overlay = document.querySelector('.dynamic-island-overlay');

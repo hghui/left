@@ -343,13 +343,12 @@ body {
 
     .timer-section {
         padding: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     .time-display,
     .love-timer {
         padding: 1rem;
-        width: 100%;
-        box-sizing: border-box;
     }
 
     .current-time {
@@ -432,6 +431,16 @@ body {
 
     .dynamic-island-overlay {
         backdrop-filter: blur(8px);
+    }
+
+    /* 确保计时器在移动端可见 */
+    .timer-section,
+    .time-display,
+    .love-timer {
+        width: 100%;
+        box-sizing: border-box;
+        opacity: 1;
+        visibility: visible;
     }
 }
 
