@@ -652,7 +652,8 @@
 
         .feature-cards-wrapper {
             position: relative;
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
             padding: 20px;
             transform: translateY(20px);
@@ -712,7 +713,7 @@
         /* 移动端适配 */
         @media (max-width: 768px) {
             .feature-cards-wrapper {
-                flex-direction: column;
+                grid-template-columns: 1fr;
                 gap: 15px;
             }
 
@@ -1347,6 +1348,12 @@
                         <div class="card-content">
                             <h3>趣味</h3>
                             <p>轻松愉快的娱乐时光</p>
+                        </div>
+                    </div>
+                    <div class="feature-card" data-href="fortune.html">
+                        <div class="card-content">
+                            <h3>运势</h3>
+                            <p>查看今日运势和吉凶</p>
                         </div>
                     </div>
                     <div class="feature-card" data-href="parenting.html">
