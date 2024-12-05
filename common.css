@@ -338,15 +338,100 @@ body {
         grid-template-columns: 1fr;
         padding: 1rem;
         gap: 1rem;
+        margin-top: 1rem;
     }
 
-    .timer-section,
-    .features-section {
+    .timer-section {
         padding: 1.5rem;
     }
 
+    .time-display,
+    .love-timer {
+        padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .current-time {
+        font-size: 2em;
+    }
+
+    .lunar-info {
+        font-size: 1em;
+    }
+
+    #love-timer {
+        font-size: 1.5em;
+    }
+
+    .features-section {
+        padding: 1rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
     .feature-card {
-        padding: 1.2rem;
+        padding: 1rem;
+    }
+
+    .feature-card .icon {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1rem;
+    }
+
+    .feature-card p {
+        font-size: 0.8rem;
+    }
+
+    .fortune-island {
+        width: 90vw;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .fortune-content {
+        gap: 12px;
+    }
+
+    .fortune-title {
+        font-size: 1.2em;
+    }
+
+    .fortune-summary {
+        font-size: 1em;
+        padding: 6px 0;
+    }
+
+    .fortune-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .fortune-scores {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .score-value {
+        font-size: 0.9em;
+    }
+
+    .fortune-tip {
+        font-size: 0.9em;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+
+    .feature-card:active {
+        transform: scale(0.95);
+    }
+
+    .dynamic-island-overlay {
+        backdrop-filter: blur(8px);
     }
 }
 
@@ -509,5 +594,232 @@ body {
     .feature-card:active::before {
         opacity: 1;
         animation: borderFlow 1.5s linear;
+    }
+}
+
+/* 运势灵动岛样式 */
+.fortune-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 8px;
+}
+
+.fortune-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.4em;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.fortune-icon {
+    font-size: 1.2em;
+}
+
+.fortune-date {
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.fortune-summary {
+    font-size: 1.1em;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.5;
+    text-align: center;
+    padding: 8px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fortune-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.fortune-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.item-label {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.item-value {
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.fortune-scores {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.score-label {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.score-value {
+    color: #FFD700;
+    letter-spacing: 2px;
+}
+
+/* 运势动画 */
+.fortune-content > * {
+    animation: slideUpFade 0.6s var(--animation-timing) forwards;
+    opacity: 0;
+}
+
+.fortune-title { animation-delay: 0.1s; }
+.fortune-date { animation-delay: 0.2s; }
+.fortune-summary { animation-delay: 0.3s; }
+.fortune-details { animation-delay: 0.4s; }
+.fortune-scores { animation-delay: 0.5s; }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .fortune-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .fortune-scores {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 添加新的运势提示样式 */
+.fortune-tip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    margin-top: 8px;
+}
+
+.tip-icon {
+    font-size: 1.2em;
+}
+
+/* 错误提示样式 */
+.error-island .modal-content {
+    background: rgba(255, 59, 48, 0.1);
+}
+
+.error-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+}
+
+.error-icon {
+    font-size: 1.5em;
+}
+
+.error-message {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1em;
+}
+
+/* 移动端适配优化 */
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: auto;
+    }
+
+    .main-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 1rem;
+        margin-top: 1rem;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .features-section {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 1rem;
+        max-height: calc(100vh - 300px);
+        overflow-y: auto;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch; /* iOS smooth scroll */
+    }
+
+    /* 隐藏滚动条但保持功能 */
+    .features-section::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* 优化滚动时的性能 */
+    .features-section {
+        will-change: transform;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+
+    /* 卡片动画优化 */
+    .feature-card {
+        transform: translateZ(0);
+        will-change: transform;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 滚动时的视差效果 */
+    .feature-card {
+        opacity: 0.8;
+        transform: scale(0.95);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .feature-card.in-view {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* 触摸反馈优化 */
+    .feature-card:active {
+        transform: scale(0.98);
+        transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+/* 添加滚动检测和视差效果 */
+@media (max-width: 768px) {
+    .features-section {
+        position: relative;
+    }
+
+    .feature-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .feature-card.scrolling {
+        transform: scale(0.98);
+        opacity: 0.8;
     }
 } 
